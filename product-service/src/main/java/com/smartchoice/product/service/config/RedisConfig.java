@@ -1,6 +1,5 @@
-package com.smarchoice.product.adapter.service.config;
+package com.smartchoice.product.service.config;
 
-import com.smarchoice.product.adapter.service.dto.Product;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

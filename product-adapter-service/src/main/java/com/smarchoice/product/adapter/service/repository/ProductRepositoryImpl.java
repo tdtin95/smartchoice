@@ -1,7 +1,9 @@
 package com.smarchoice.product.adapter.service.repository;
 
 import com.smarchoice.product.adapter.service.dto.Product;
+import com.smarchoice.product.adapter.service.resource.Provider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,39 +13,54 @@ import java.util.concurrent.TimeUnit;
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
-
     private RedisTemplate template;
+
+    @Value("${cache.product.group.lifespan}")
+    private long cacheLifeSpan;
 
     public ProductRepositoryImpl(@Qualifier("redisTemplate") RedisTemplate template) {
         this.template = template;
     }
 
     @Override
-    public boolean isProductGroupExist(String productName) {
-        return template.hasKey(productName);
+    public boolean isProductGroupExist(String productName, Provider provider) {
+        return template.hasKey(buildProductGroupIdentifier(productName, provider));
     }
 
     @Override
-    public List<Product> getProductGroup(String productName) {
-        return template.opsForList().range(productName, 0, -1);
-
+    public List<Product> getProductGroup(String productName, Provider provider) {
+        return template.opsForList().range(buildProductGroupIdentifier(productName, provider), 0, -1);
     }
 
     @Override
-    public void saveProductGroup(String productName, List<Product> products) {
-        template.opsForList().rightPushAll(productName, products);
-        template.expire(productName, 60, TimeUnit.SECONDS);
+    public void saveProductGroup(String productName, Provider provider, List<Product> products) {
+        String identifier = buildProductGroupIdentifier(productName, provider);
+        template.opsForList().rightPushAll(identifier, products);
+        template.expire(identifier, cacheLifeSpan, TimeUnit.SECONDS);
     }
 
     @Override
-    public void updateProductGroup(String productName, List<Product> products) {
-        deleteProductGroup(productName);
-        saveProductGroup(productName, products);
-        template.expire(productName, 60, TimeUnit.SECONDS);
+    public void updateProductGroup(String productName, Provider provider, List<Product> products) {
+        String identifier = buildProductGroupIdentifier(productName, provider);
+        deleteProductGroup(productName, provider);
+        saveProductGroup(productName, provider, products);
+        template.expire(identifier, cacheLifeSpan, TimeUnit.SECONDS);
     }
 
     @Override
-    public void deleteProductGroup(String productName) {
-        template.delete(productName);
+    public void deleteProductGroup(String productName, Provider provider) {
+        template.delete(buildProductGroupIdentifier(productName, provider));
+    }
+
+    /**
+     * Build product group cache identifier that is the combination of product name and
+     * provider that product belongs to
+     *
+     * @param productName product name
+     * @param provider    3rd party provider {@link Provider}
+     * @return product group identifier
+     */
+    private String buildProductGroupIdentifier(String productName, Provider provider) {
+        return productName + "-" + provider.getName();
     }
 }

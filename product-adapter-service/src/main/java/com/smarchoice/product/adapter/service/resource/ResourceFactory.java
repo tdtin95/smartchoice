@@ -11,13 +11,15 @@ import org.springframework.web.context.annotation.ApplicationScope;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @ApplicationScope
 public class ResourceFactory {
 
-    private List<ProviderResource> resources;
+    private Map<Provider, ProviderResource> resources;
 
     private ProviderResource<Product> shopeeResource;
     private ProviderResource<Product> tikiResource;
@@ -25,22 +27,22 @@ public class ResourceFactory {
 
     @PostConstruct
     public void initResource() {
-        resources = new ArrayList<>();
-        register(shopeeResource);
-        register(tikiResource);
-        register(lazadaResource);
+        resources = new HashMap<>();
+        register(Provider.SHOPEE, shopeeResource);
+        register(Provider.TIKI, tikiResource);
+        register(Provider.LAZADA, lazadaResource);
     }
 
     /**
      * Register provider in order to get products
-     *
+     * @param provider {@link Provider}
      * @param resource provider resource to call external api
      */
-    public void register(ProviderResource<?> resource) {
-        resources.add(resource);
+    public void register(Provider provider, ProviderResource<?> resource) {
+        resources.put(provider, resource);
     }
 
-    public List<ProviderResource> getResources() {
+    public Map<Provider, ProviderResource> getResources() {
         return resources;
     }
 

@@ -1,14 +1,13 @@
-package com.smarchoice.product.adapter.service.dto;
+package com.smartchoice.product.service.dto;
 
 import lombok.*;
 
-import java.io.Serializable;
 import java.util.Date;
 
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Promotion implements Serializable {
+public class Promotion {
     @Getter
     @Setter
     private String details;

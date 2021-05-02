@@ -1,19 +1,21 @@
-package com.smarchoice.product.adapter.service.dto;
+package com.smartchoice.product.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-
-import java.io.Serializable;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Product  implements Serializable {
+public class Product {
 
     @Getter
     @Setter
-    private String image;
+    private String id;
+
+    @Getter
+    @Setter
+    private byte[] images;
 
     @Getter
     @Setter
