@@ -2,6 +2,8 @@ package com.smarchoice.product.adapter.service.repository;
 
 import com.smarchoice.product.adapter.service.dto.Product;
 import com.smarchoice.product.adapter.service.resource.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class ProductRepositoryImpl implements ProductRepository {
 
     private RedisTemplate template;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductRepositoryImpl.class);
 
     @Value("${cache.product.group.lifespan}")
     private long cacheLifeSpan;
@@ -24,6 +27,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public boolean isProductGroupExist(String productName, Provider provider) {
+        LOGGER.info("--------- {}", template.opsForList().range("product3", 0,-1));
         return template.hasKey(buildProductGroupIdentifier(productName, provider));
     }
 
@@ -35,6 +39,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void saveProductGroup(String productName, Provider provider, List<Product> products) {
         String identifier = buildProductGroupIdentifier(productName, provider);
+        LOGGER.info("Save {}", identifier);
         template.opsForList().rightPushAll(identifier, products);
         template.expire(identifier, cacheLifeSpan, TimeUnit.SECONDS);
     }
@@ -42,6 +47,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void updateProductGroup(String productName, Provider provider, List<Product> products) {
         String identifier = buildProductGroupIdentifier(productName, provider);
+        LOGGER.info("update {}", identifier);
         deleteProductGroup(productName, provider);
         saveProductGroup(productName, provider, products);
         template.expire(identifier, cacheLifeSpan, TimeUnit.SECONDS);
