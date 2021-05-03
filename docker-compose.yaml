@@ -13,16 +13,16 @@ services:
 #       - POSTGRES_PASSWORD=admin
 #       - POSTGRES_DB=product-db
 
-#   mongo:
-#     image: mongo
-#     volumes:
-#       - mongo-volume:/data/db
-#     environment:
-#       - MONGO_INITDB_ROOT_USERNAME=admin
-#       - MONGO_INITDB_ROOT_PASSWORD=admin
-#     ports:
-#       - 27017:27017
-#     restart: unless-stopped
+  mongo:
+    image: mongo
+    volumes:
+      - mongo-volume:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - 27017:27017
+    restart: unless-stopped
 
   redis:
     image: redis:6-alpine
