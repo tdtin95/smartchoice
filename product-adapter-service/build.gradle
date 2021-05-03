@@ -22,6 +22,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.2.3.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-ribbon'
 
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'redis.clients:jedis'
@@ -35,6 +37,17 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:spring-mock-mvc'
 }
+
+ext {
+    set('springCloudVersion', "2020.0.2")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 
 test {
     useJUnitPlatform()
