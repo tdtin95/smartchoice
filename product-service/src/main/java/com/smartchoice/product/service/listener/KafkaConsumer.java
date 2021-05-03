@@ -1,7 +1,9 @@
 package com.smartchoice.product.service.listener;
 
 import com.smartchoice.product.service.dto.Product;
-import com.smartchoice.product.service.repository.ProductRepository;
+import com.smartchoice.product.service.entity.ProductGroup;
+import com.smartchoice.product.service.repository.ProductGroupRepository;
+import com.smartchoice.product.service.repository.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +18,12 @@ import java.util.List;
 public class KafkaConsumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 
-    private ProductRepository productRepository;
+
+    private final Repository<ProductGroup> repository;
 
     @Autowired
-    public KafkaConsumer(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public KafkaConsumer(ProductGroupRepository repository) {
+        this.repository = repository;
     }
 
     @KafkaHandler(isDefault = true)
@@ -28,9 +31,7 @@ public class KafkaConsumer {
         LOGGER.info("Receive product form Kafka, size {}", products.size());
         if (products.size() > 0) {
             String productName = products.get(0).getProductName();
-            productRepository.updateProductGroup(productName, products);
-            LOGGER.info("After get {} from kafka {} ", productName, productRepository.getProductGroup(productName).size());
-
+            repository.save(new ProductGroup(productName, products));
         }
     }
 }
