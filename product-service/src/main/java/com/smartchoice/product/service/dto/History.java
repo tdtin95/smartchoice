@@ -1,17 +1,21 @@
-package com.smartchoice.audit.service.entity;
+package com.smartchoice.product.service.dto;
 
-import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
-@Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@Document
 public class History {
-    @Id
+
+
+    @Getter
+    @Setter
     private String id;
 
     @Getter

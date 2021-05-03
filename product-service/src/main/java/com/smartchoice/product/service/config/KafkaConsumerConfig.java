@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-public class KafkaConfig {
+public class KafkaConsumerConfig {
     @Value("${kafka.bootstrapAddress}")
     private String bootstrapServers;
 

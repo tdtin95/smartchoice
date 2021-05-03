@@ -15,14 +15,14 @@ import java.util.List;
 
 @Component
 @KafkaListener(topics = "product-message-queue")
-public class KafkaConsumer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
+public class ProductConsumer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductConsumer.class);
 
 
     private final Repository<ProductGroup> repository;
 
     @Autowired
-    public KafkaConsumer(ProductGroupRepository repository) {
+    public ProductConsumer(ProductGroupRepository repository) {
         this.repository = repository;
     }
 

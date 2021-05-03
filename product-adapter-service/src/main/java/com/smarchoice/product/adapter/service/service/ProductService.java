@@ -1,6 +1,7 @@
 package com.smarchoice.product.adapter.service.service;
 
 import com.smarchoice.product.adapter.service.dto.Product;
+import com.smarchoice.product.adapter.service.event.ProductProducer;
 import com.smarchoice.product.adapter.service.exception.IncompleteException;
 import com.smarchoice.product.adapter.service.repository.ProductRepository;
 import com.smarchoice.product.adapter.service.resource.Provider;
@@ -29,10 +30,8 @@ public class ProductService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
     private ResourceFactory resourceFactory;
     private ProductRepository repository;
-    private KafkaTemplate<String, List<Product>> kafkaTemplate;
+    private ProductProducer productProducer;
 
-    @Value("${message.queue.product.topic}")
-    private String messageQueueTopic;
 
     /**
      * Get products from 3rd providers
@@ -65,7 +64,7 @@ public class ProductService {
                 }
 
             }
-            sendToMessageQueue(products);
+            productProducer.sendToMessageQueue(products);
             return products;
         } catch (InterruptedException e) {
             LOGGER.error("Process interrupted", e);
@@ -98,28 +97,6 @@ public class ProductService {
         };
     }
 
-    private void sendToMessageQueue(List<Product> products) {
-        if (CollectionUtils.isNotEmpty(products)) {
-            ListenableFuture<SendResult<String, List<Product>>> future =
-                    kafkaTemplate.send(messageQueueTopic, products);
-
-            future.addCallback(new ListenableFutureCallback<>() {
-
-                @Override
-                public void onSuccess(SendResult<String, List<Product>> result) {
-                    LOGGER.info("Sent products with offset=[" + result.getRecordMetadata().offset() + "]");
-                }
-
-                @Override
-                public void onFailure(Throwable ex) {
-                    LOGGER.info("Unable to send products=["
-                            + products + "] due to : " + ex.getMessage());
-                }
-            });
-        }
-
-    }
-
     @Autowired
     public void setResourceFactory(ResourceFactory resourceFactory) {
         this.resourceFactory = resourceFactory;
@@ -131,7 +108,7 @@ public class ProductService {
     }
 
     @Autowired
-    public void setKafkaTemplate(KafkaTemplate<String, List<Product>> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
+    public void setProductProducer(ProductProducer productProducer) {
+        this.productProducer = productProducer;
     }
 }
