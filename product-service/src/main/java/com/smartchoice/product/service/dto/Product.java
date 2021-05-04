@@ -17,6 +17,10 @@ public class Product implements Serializable {
 
     @Getter
     @Setter
+    private Provider provider;
+
+    @Getter
+    @Setter
     private long price;
 
     @Getter

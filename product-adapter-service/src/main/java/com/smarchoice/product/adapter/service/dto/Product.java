@@ -1,6 +1,7 @@
 package com.smarchoice.product.adapter.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.smarchoice.product.adapter.service.resource.Provider;
 import lombok.*;
 
 import java.io.Serializable;
@@ -13,11 +14,16 @@ public class Product  implements Serializable {
 
     @Getter
     @Setter
-    private String image;
+    private String productName;
 
     @Getter
     @Setter
-    private String productName;
+    private Provider provider;
+
+    @Getter
+    @Setter
+    private String image;
+
     @Getter
     @Setter
     private long price;
@@ -27,4 +33,5 @@ public class Product  implements Serializable {
     @Getter
     @Setter
     private Promotion promotion;
+
 }

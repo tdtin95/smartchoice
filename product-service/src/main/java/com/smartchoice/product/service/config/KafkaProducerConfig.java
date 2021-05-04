@@ -23,7 +23,7 @@ public class KafkaProducerConfig {
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
 
-    @Value(value = "${message.queue.kafka.topic}")
+    @Value(value = "${message.queue.history.topic}")
     private String historyTopicName;
 
     @Bean

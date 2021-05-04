@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@KafkaListener(topics = "product-message-queue")
+@KafkaListener(topics = "${message.queue.product.topic}")
 public class ProductConsumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductConsumer.class);
 
@@ -27,7 +27,7 @@ public class ProductConsumer {
     }
 
     @KafkaHandler(isDefault = true)
-    void listenDefault(List<Product> products) {
+    void listen(List<Product> products) {
         LOGGER.info("Receive product form Kafka, size {}", products.size());
         if (products.size() > 0) {
             String productName = products.get(0).getProductName();

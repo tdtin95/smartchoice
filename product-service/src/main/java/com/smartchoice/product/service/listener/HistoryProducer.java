@@ -15,7 +15,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 public class HistoryProducer {
     private static final Logger LOGGER = LoggerFactory.getLogger(HistoryProducer.class);
     private KafkaTemplate<String, History> template;
-    @Value(value = "${message.queue.kafka.topic}")
+    @Value(value = "${message.queue.history.topic}")
     private String historyTopicName;
 
     @Autowired

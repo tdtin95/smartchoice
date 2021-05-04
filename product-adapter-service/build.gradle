@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.5'
+    id 'org.springframework.boot' version '2.3.10.RELEASE'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
@@ -23,7 +23,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.2.3.RELEASE'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-ribbon'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'redis.clients:jedis'
@@ -39,7 +39,7 @@ dependencies {
 }
 
 ext {
-    set('springCloudVersion', "2020.0.2")
+    set('springCloudVersion', "Hoxton.SR11")
 }
 
 dependencyManagement {

@@ -1,9 +1,6 @@
 package com.smartchoice.product.service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -11,6 +8,7 @@ import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class History {
 
 

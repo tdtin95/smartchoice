@@ -12,6 +12,7 @@ import java.util.List;
 public abstract class AbstractProviderResource implements ProviderResource<Product> {
 
     protected abstract String getServerUrl();
+    protected abstract Provider getProvider();
 
     @Override
     public List<Product> findProduct(MultiValueMap<String, String> criterion) {
@@ -26,6 +27,9 @@ public abstract class AbstractProviderResource implements ProviderResource<Produ
                         requestEntity,
                         new ParameterizedTypeReference<>() {
                         });
-        return response.getBody();
+        List<Product> products = response.getBody();
+        products.forEach(item -> item.setProvider(getProvider()));
+        return products;
     }
+
 }

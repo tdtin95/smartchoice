@@ -1,9 +1,7 @@
 package com.smartchoice.product.service.resource;
 
-import com.netflix.discovery.EurekaClient;
 import com.smartchoice.product.service.dto.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -22,12 +20,12 @@ public class ProductAdapterServiceResource {
     @Value("${product.adapter.service.url}")
     private String serverUrl;
 
-//    @Autowired
-//    public ProductAdapterServiceResource(@Qualifier("eurekaClient") EurekaClient eurekaClient) {
-//        this.eurekaClient = eurekaClient;
-//    }
+    private RestTemplate restTemplate;
 
-//    private EurekaClient eurekaClient;
+    @Autowired
+    public ProductAdapterServiceResource(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     public List<Product> findProduct(MultiValueMap<String, String> criterion) {
         HttpHeaders headers = new HttpHeaders();
@@ -35,7 +33,7 @@ public class ProductAdapterServiceResource {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverUrl).queryParams(criterion);
         HttpEntity<Product> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<List<Product>> response =
-                new RestTemplate().exchange(
+                restTemplate.exchange(
                         builder.toUriString(),
                         HttpMethod.GET,
                         requestEntity,

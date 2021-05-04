@@ -1,6 +1,7 @@
 package com.smarchoice.product.adapter.service.resource.provider.lazada;
 
 import com.smarchoice.product.adapter.service.resource.AbstractProviderResource;
+import com.smarchoice.product.adapter.service.resource.Provider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.ApplicationScope;
@@ -17,5 +18,10 @@ public class LazadaResource extends AbstractProviderResource {
     @Override
     protected String getServerUrl() {
         return serverUrl;
+    }
+
+    @Override
+    protected Provider getProvider() {
+        return Provider.LAZADA;
     }
 }

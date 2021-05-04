@@ -27,7 +27,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public boolean isProductGroupExist(String productName, Provider provider) {
-        LOGGER.info("--------- {}", template.opsForList().range("product3", 0,-1));
         return template.hasKey(buildProductGroupIdentifier(productName, provider));
     }
 
