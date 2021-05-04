@@ -92,7 +92,9 @@ public class ProductService {
                 return repository.getProductGroup(productName, provider);
             }
             List<Product> products = resource.findProduct(queryParams);
-            repository.saveProductGroup(productName, provider, products);
+            if(CollectionUtils.isNotEmpty(products)) {
+                repository.saveProductGroup(productName, provider, products);
+            }
             return products;
         };
     }
