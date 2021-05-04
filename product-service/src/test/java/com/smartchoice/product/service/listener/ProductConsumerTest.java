@@ -58,7 +58,7 @@ public class ProductConsumerTest {
     public void listen_shouldCacheProducts_whenReceiveMessageFromKafka() throws InterruptedException {
         Map<String, Object> configs = new HashMap<>(KafkaTestUtils.producerProps(embeddedKafkaBroker));
         Producer<String, List<Product>> producer = new DefaultKafkaProducerFactory<>(
-                configs, new StringSerializer(), new JsonSerializer()).createProducer();
+                configs, new StringSerializer(), new JsonSerializer<List<Product>>()).createProducer();
 
 
         Product product = Product.builder().productName("coat")
@@ -75,7 +75,7 @@ public class ProductConsumerTest {
     public void listen_shouldNotCacheEmptyProducts() throws InterruptedException {
         Map<String, Object> configs = new HashMap<>(KafkaTestUtils.producerProps(embeddedKafkaBroker));
         Producer<String, List<Product>> producer = new DefaultKafkaProducerFactory<>(
-                configs, new StringSerializer(), new JsonSerializer()).createProducer();
+                configs, new StringSerializer(), new JsonSerializer<List<Product>>()).createProducer();
         String id = "product-id";
         producer.send(new ProducerRecord<>(topic, id, List.of()));
         producer.flush();
