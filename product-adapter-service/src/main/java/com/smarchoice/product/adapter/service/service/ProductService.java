@@ -7,6 +7,7 @@ import com.smarchoice.product.adapter.service.repository.ProductRepository;
 import com.smarchoice.product.adapter.service.resource.Provider;
 import com.smarchoice.product.adapter.service.resource.ProviderResource;
 import com.smarchoice.product.adapter.service.resource.ResourceFactory;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ import java.util.concurrent.Future;
 @Service
 public class ProductService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
     public static final String PRODUCT_NAME = "productName";
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
     private ResourceFactory resourceFactory;
     private ProductRepository repository;
     private ProductProducer productProducer;
@@ -90,7 +91,10 @@ public class ProductService {
                 return repository.search(productName, provider);
             }
             List<Product> products = resource.findProduct(queryParams);
-            repository.save(productName, provider, products);
+
+            if (!products.isEmpty()) {
+                repository.save(productName, provider, products);
+            }
             return products;
         };
     }

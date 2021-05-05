@@ -1,6 +1,5 @@
 package com.smarchoice.product.adapter.service.event;
 
-import java.util.List;
 import com.smarchoice.product.adapter.service.dto.Product;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -12,6 +11,8 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
+
+import java.util.List;
 
 @Component
 public class ProductProducer {
@@ -39,7 +40,7 @@ public class ProductProducer {
                 @Override
                 public void onFailure(Throwable ex) {
                     LOGGER.info("Unable to send products=["
-                        + products + "] due to : " + ex.getMessage());
+                            + products + "] due to : " + ex.getMessage());
                 }
             });
         }

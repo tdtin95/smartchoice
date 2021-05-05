@@ -1,13 +1,10 @@
 package com.smarchoice.product.adapter.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.io.Serializable;
 import com.smarchoice.product.adapter.service.resource.Provider;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Builder
 @NoArgsConstructor

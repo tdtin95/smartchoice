@@ -13,11 +13,9 @@ import org.springframework.web.context.annotation.ApplicationScope;
 public class ShopeeResource extends AbstractProviderResource {
 
     public static final String QUALIFIER_NAME = "SHOPEE";
-
+    private final RestTemplate restTemplate;
     @Value("${external.provider.shopee.service.url}")
     private String serverUrl;
-
-    private final RestTemplate restTemplate;
 
     @Autowired
     public ShopeeResource(RestTemplate restTemplate) {

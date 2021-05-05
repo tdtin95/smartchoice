@@ -93,7 +93,9 @@ public class ProductControllerTest {
 
     @Test
     public void search_shouldReturnEmptyList_whenProgressInterrupted() throws InterruptedException {
-        Mockito.doAnswer((answer) -> {throw new InterruptedException();})
+        Mockito.doAnswer((answer) -> {
+            throw new InterruptedException();
+        })
                 .when(productProducer)
                 .sendToMessageQueue(anyList());
 
@@ -153,15 +155,15 @@ public class ProductControllerTest {
 
     }
 
-   @Test
-   public void search_shouldSendResultToKafka_whenFinishCallingServices(){
-       given()
-               .auth().none()
-               .param(PRODUCT_NAME, productSearchValue)
-               .when().get(PRODUCTS_PATH).then()
-               .body(REST_FIELD_SIZE, is(3))
-               .statusCode(200);
-   }
+    @Test
+    public void search_shouldSendResultToKafka_whenFinishCallingServices() {
+        given()
+                .auth().none()
+                .param(PRODUCT_NAME, productSearchValue)
+                .when().get(PRODUCTS_PATH).then()
+                .body(REST_FIELD_SIZE, is(3))
+                .statusCode(200);
+    }
 
     private void mockRestTemplate() {
         ResponseEntity<List<Product>> response = Mockito.mock(ResponseEntity.class);

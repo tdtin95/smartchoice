@@ -1,10 +1,11 @@
 package com.smarchoice.product.adapter.service.config;
 
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import org.springframework.boot.test.context.TestConfiguration;
 import redis.embedded.RedisServer;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 @TestConfiguration
 public class RedisTestConfiguration {

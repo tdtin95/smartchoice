@@ -13,11 +13,9 @@ import org.springframework.web.context.annotation.ApplicationScope;
 public class TikiResource extends AbstractProviderResource {
 
     public static final String QUALIFIER_NAME = "TIKI";
-
+    private final RestTemplate restTemplate;
     @Value("${external.provider.tiki.service.url}")
     private String serverUrl;
-
-    private final RestTemplate restTemplate;
 
     @Autowired
     public TikiResource(RestTemplate restTemplate) {
@@ -28,6 +26,7 @@ public class TikiResource extends AbstractProviderResource {
     protected RestTemplate getRestTemplate() {
         return restTemplate;
     }
+
     @Override
     protected String getServerUrl() {
         return serverUrl;

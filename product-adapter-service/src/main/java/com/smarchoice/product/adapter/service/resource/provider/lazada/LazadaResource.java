@@ -13,11 +13,9 @@ import org.springframework.web.context.annotation.ApplicationScope;
 public class LazadaResource extends AbstractProviderResource {
 
     public static final String QUALIFIER_NAME = "LAZADA";
-
+    private final RestTemplate restTemplate;
     @Value("${external.provider.lazada.service.url}")
     private String serverUrl;
-
-    private final RestTemplate restTemplate;
 
     @Autowired
     public LazadaResource(RestTemplate restTemplate) {

@@ -1,6 +1,5 @@
 package com.smarchoice.product.adapter.service.controller;
 
-import java.util.List;
 import com.smarchoice.product.adapter.service.dto.Product;
 import com.smarchoice.product.adapter.service.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class ProductController implements ProductApi {

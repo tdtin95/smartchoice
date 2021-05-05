@@ -1,8 +1,5 @@
 package com.smarchoice.product.adapter.service.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
 import com.smarchoice.product.adapter.service.ProductTestUtil;
 import com.smarchoice.product.adapter.service.config.RedisTestConfiguration;
 import com.smarchoice.product.adapter.service.dto.Product;
@@ -14,6 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @RunWith(SpringRunner.class)
@@ -36,7 +37,7 @@ public class ProductRepositoryTest {
     public void save_shouldThrowException_when_productNameAndProviderAreNull() {
         Product product = ProductTestUtil.createProduct(Provider.SHOPEE);
         assertThrows(NullPointerException.class, () ->
-            repository.save(null, null, List.of(product)));
+                repository.save(null, null, List.of(product)));
     }
 
     @Test
