@@ -26,7 +26,7 @@ In order to satisfy the requirement, we need to build Microservice system that w
 
 //PICTURE
 
-- **product-adapter-service** : service to call external 3rd party providers' api (Tiki, Lazada, Shopee...) the fetch/search products from them. The **product-adapter-service** is the only service that has the right to access to provider's api, no direct called will be made to 3rd without going through adapter service.
+- **product-adapter-service** : service to call external 3rd party providers' api (Tiki, Lazada, Shopee...) to fetch/search products from them. The **product-adapter-service** is the only service that has the right to access to provider's api, no direct called will be made to 3rd without going through adapter service.
 - **product-service** : the main service that the UI/Customer communicates directly to. This service will call **product-adapter-service** to search a particular product information from 3rd provider.
 - **audit-service** : the service used for keep tracking the search history of user
 - **api-gateway** : Route along services via a single point. It helps to access to internal services without knowing their host and port. Request will be redirected to exact service need to be serve by situations.
@@ -37,7 +37,7 @@ In order to satisfy the requirement, we need to build Microservice system that w
 
 ## Product Apdater Service
 
-Access to 3rd parties' api/library, this service role plays as adapter that call 3 parties, other services do not allowed to use or call directly to 3rd api. The benefit it will standardlize the result that we get from 3rd to actual information we want to achieve and return them in the same structure as we define in product-adapter-service. In the future if we want to add more provider or their apis are changes, we just need to update product-adapter-service, other services do not need to care, that means we narrow the risk and maintainance cost.
+Access to 3rd parties' api/library, this service role plays as adapter that call 3rd parties, other services do not allowed to use or call directly to 3rd api. The benefit it will standardlize the result that we get from 3rd to actual information we want to achieve and return them in the same structure as we define in product-adapter-service. In the future if we want to add more provider or their apis are changes, we just need to update product-adapter-service, other services do not need to care, that means we narrow the risk and maintainance cost.
 ### Design 
 
 Each call to 3rd will be charged, we need to reduced making call to 3rd api as much as possible. Since all the data must be completely returned from 3rd parties before the API can return to the website, we can asynchronously call to those apis and cache the result base on **product name and provider name** , if one of those providers is unreachable or down, we just need to retry to call on that service, the result from other providers that we succesfully called before will be get from cache, instead of remake the full call of all providers. So what we need is :
@@ -48,7 +48,7 @@ Each call to 3rd will be charged, we need to reduced making call to 3rd api as m
 
 A HashMap database structure as **REDIS** seems to meet our requirement.
 
-In high traffic situation, their may be thousands calls  from **product-service** to **product-adapter-service** to search different products. In order to handle huge traffic we can use the **Kafka** , the **product-adapter-service** will be a producer that whenever it successfully get information of a product from 3rd parties, it will send that information to message queue. The **product-service** as the consumer will receive the information from queue and update to cache system(Redis), when we have high traffic, we can scale up to multiple instance that in the same message group, so that if at least one instance get the information from queue and update to cache, than other instances do not need to call **product-adapter-service**,than we can save a lost of money. It also ensures that if the **product-service** is down, the information of product will not be lost since it is kept in the queue.
+In high traffic situation, their may be thousands calls  from **product-service** to **product-adapter-service** to search different products. In order to handle huge traffic we can use the **Kafka** , the **product-adapter-service** will be a producer that whenever it successfully get information of a product from 3rd parties, it will send that information to message queue. The **product-service** as a consumer will receive the information from queue and update to cache system(Redis), when we have high traffic, we can scale up to multiple instances that in the same message group, so that if at least one instance is able to get the information from queue and update to cache, then other instances do not need to call **product-adapter-service**, a lost of money will be saved. It also ensures that if the **product-service** is down, the information of product will not be lost since it is kept in the queue.
 // Picture
 ### Data model
 Product will contains the product name, current price, the discount rate, promotion
