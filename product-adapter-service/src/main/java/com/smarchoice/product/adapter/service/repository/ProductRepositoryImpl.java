@@ -38,17 +38,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void save(String productName, Provider provider, List<Product> products) {
         String identifier = buildProductGroupIdentifier(productName, provider);
-        LOGGER.info("Save {}", identifier);
-        template.opsForList().rightPushAll(identifier, products);
-        template.expire(identifier, cacheLifeSpan, TimeUnit.SECONDS);
-    }
-
-    @Override
-    public void update(String productName, Provider provider, List<Product> products) {
-        String identifier = buildProductGroupIdentifier(productName, provider);
         LOGGER.info("update {}", identifier);
         delete(productName, provider);
-        save(productName, provider, products);
+        template.opsForList().rightPushAll(identifier, products);
         template.expire(identifier, cacheLifeSpan, TimeUnit.SECONDS);
     }
 

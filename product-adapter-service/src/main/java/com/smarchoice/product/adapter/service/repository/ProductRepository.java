@@ -24,23 +24,13 @@ public interface ProductRepository {
     List<Product> search(String productName, Provider provider);
 
     /**
-     * Save a list of product for providers (tiki, lazada, shopee) based on product name
-     *
-     * @param productName product name (e.g : pencil)
-     * @param provider 3rd party provider {@link Provider}
-     * @param products list of product that to be saved
-     */
-    void save(String productName, Provider provider, List<Product> products);
-
-
-    /**
      * update a list of product for providers (tiki, lazada, shopee) based on product name
      *
      * @param productName product name (e.g : pencil)
      * @param provider 3rd party provider {@link Provider}
      * @param products list of product that to be saved
      */
-    void update(String productName, Provider provider, List<Product> products);
+    void save(String productName, Provider provider, List<Product> products);
 
     /**
      * delete a list of product for providers (tiki, lazada, shopee) based on product name
