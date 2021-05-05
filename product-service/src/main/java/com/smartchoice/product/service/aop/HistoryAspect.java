@@ -2,6 +2,7 @@ package com.smartchoice.product.service.aop;
 
 import com.smartchoice.product.service.dto.History;
 import com.smartchoice.product.service.listener.HistoryProducer;
+import com.smartchoice.product.service.request.UserInformation;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,7 +14,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,10 +25,12 @@ public class HistoryAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HistoryAspect.class);
     private HistoryProducer historyProducer;
+    private UserInformation userInformation;
 
     @Autowired
-    public HistoryAspect(HistoryProducer historyProducer) {
+    public HistoryAspect(HistoryProducer historyProducer, UserInformation userInformation) {
         this.historyProducer = historyProducer;
+        this.userInformation = userInformation;
     }
 
 
@@ -39,10 +41,11 @@ public class HistoryAspect {
         MultiValueMap<String, String> queryParams = (MultiValueMap<String, String>) methodArguments[0];
         String productName = queryParams.getFirst(PRODUCT_NAME);
 
+
         if (StringUtils.isNotBlank(productName)) {
             History history = History.builder().actionOn(new Date())
                     .productName(productName)
-                    .username("username")
+                    .username(userInformation.getUsername())
                     .id(UUID.randomUUID().toString())
                     .build();
             historyProducer.storeHistory(history);
