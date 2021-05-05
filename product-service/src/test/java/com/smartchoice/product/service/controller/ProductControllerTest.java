@@ -33,6 +33,8 @@ import static org.hamcrest.CoreMatchers.is;
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:7071", "port=7071"})
 public class ProductControllerTest {
     public static final String REST_FIELD_SIZE = "$.size()";
+    public static final String PRODUCT_NAME = "productName";
+    public static final String PRODUCT_INFORMATION_PATH = "/product-information";
     @MockBean
     RestTemplate restTemplate;
     @Autowired
@@ -53,8 +55,8 @@ public class ProductControllerTest {
     public void getProductInformation_shouldFindProduct() {
         RestAssuredMockMvc.given()
                 .auth().none()
-                .param("productName", "pen")
-                .get("/product-information")
+                .param(PRODUCT_NAME, "pen")
+                .get(PRODUCT_INFORMATION_PATH)
                 .then()
                 .body(REST_FIELD_SIZE, is(3))
                 .statusCode(200);
@@ -64,7 +66,7 @@ public class ProductControllerTest {
     public void getProductInformation_shouldReturnEmptyList_when_paramIsEmpty() {
         RestAssuredMockMvc.given()
                 .auth().none()
-                .get("/product-information")
+                .get(PRODUCT_INFORMATION_PATH)
                 .then()
                 .body(REST_FIELD_SIZE, is(0));
     }
@@ -77,8 +79,8 @@ public class ProductControllerTest {
         repository.save(productGroup);
         RestAssuredMockMvc.given()
                 .auth().none()
-                .param("productName", "brush")
-                .get("/product-information")
+                .param(PRODUCT_NAME, "brush")
+                .get(PRODUCT_INFORMATION_PATH)
                 .then()
                 .body(REST_FIELD_SIZE, is(1))
                 .statusCode(200);
@@ -93,8 +95,8 @@ public class ProductControllerTest {
         Thread.sleep(5000);
         RestAssuredMockMvc.given()
                 .auth().none()
-                .param("productName", "pencil")
-                .get("/product-information")
+                .param(PRODUCT_NAME, "pencil")
+                .get(PRODUCT_INFORMATION_PATH)
                 .then()
                 .body(REST_FIELD_SIZE, is(3))
                 .statusCode(200);

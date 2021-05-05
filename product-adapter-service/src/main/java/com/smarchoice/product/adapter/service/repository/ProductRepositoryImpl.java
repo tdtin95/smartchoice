@@ -1,5 +1,7 @@
 package com.smarchoice.product.adapter.service.repository;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import com.smarchoice.product.adapter.service.dto.Product;
 import com.smarchoice.product.adapter.service.resource.Provider;
 import org.slf4j.Logger;
@@ -9,15 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
-    private RedisTemplate template;
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductRepositoryImpl.class);
-
+    private final RedisTemplate template;
     @Value("${cache.product.group.lifespan}")
     private long cacheLifeSpan;
 
@@ -26,34 +24,26 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public boolean isProductGroupExist(String productName, Provider provider) {
+    public boolean isExist(String productName, Provider provider) {
         return template.hasKey(buildProductGroupIdentifier(productName, provider));
     }
 
     @Override
-    public List<Product> getProductGroup(String productName, Provider provider) {
+    public List<Product> search(String productName, Provider provider) {
         return template.opsForList().range(buildProductGroupIdentifier(productName, provider), 0, -1);
     }
 
     @Override
-    public void saveProductGroup(String productName, Provider provider, List<Product> products) {
+    public void save(String productName, Provider provider, List<Product> products) {
         String identifier = buildProductGroupIdentifier(productName, provider);
-        LOGGER.info("Save {}", identifier);
+        LOGGER.info("update {}", identifier);
+        delete(productName, provider);
         template.opsForList().rightPushAll(identifier, products);
         template.expire(identifier, cacheLifeSpan, TimeUnit.SECONDS);
     }
 
     @Override
-    public void updateProductGroup(String productName, Provider provider, List<Product> products) {
-        String identifier = buildProductGroupIdentifier(productName, provider);
-        LOGGER.info("update {}", identifier);
-        deleteProductGroup(productName, provider);
-        saveProductGroup(productName, provider, products);
-        template.expire(identifier, cacheLifeSpan, TimeUnit.SECONDS);
-    }
-
-    @Override
-    public void deleteProductGroup(String productName, Provider provider) {
+    public void delete(String productName, Provider provider) {
         template.delete(buildProductGroupIdentifier(productName, provider));
     }
 

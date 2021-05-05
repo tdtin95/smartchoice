@@ -5,7 +5,7 @@ public enum Provider {
     LAZADA("lazada"),
     TIKI("tiki");
 
-    private String name;
+    private final String name;
 
     Provider(String name) {
         this.name = name;

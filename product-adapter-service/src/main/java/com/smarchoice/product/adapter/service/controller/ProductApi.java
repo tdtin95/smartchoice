@@ -1,5 +1,6 @@
 package com.smarchoice.product.adapter.service.controller;
 
+import java.util.List;
 import com.smarchoice.product.adapter.service.dto.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -7,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(ProductApi.PRODUCT_PATH)
