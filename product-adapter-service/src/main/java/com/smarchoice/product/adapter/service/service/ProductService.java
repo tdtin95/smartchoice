@@ -1,5 +1,13 @@
 package com.smarchoice.product.adapter.service.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import com.smarchoice.product.adapter.service.dto.Product;
 import com.smarchoice.product.adapter.service.event.ProductProducer;
 import com.smarchoice.product.adapter.service.exception.IncompleteException;
@@ -7,21 +15,11 @@ import com.smarchoice.product.adapter.service.repository.ProductRepository;
 import com.smarchoice.product.adapter.service.resource.Provider;
 import com.smarchoice.product.adapter.service.resource.ProviderResource;
 import com.smarchoice.product.adapter.service.resource.ResourceFactory;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.*;
 
 
 @Service

@@ -1,9 +1,7 @@
 package com.smarchoice.product.adapter.service.resource;
 
-import org.springframework.util.MultiValueMap;
-
 import java.util.List;
-import java.util.Map;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Resource to access to external provider api

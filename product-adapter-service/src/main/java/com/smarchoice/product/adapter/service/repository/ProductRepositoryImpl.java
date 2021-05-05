@@ -1,5 +1,7 @@
 package com.smarchoice.product.adapter.service.repository;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import com.smarchoice.product.adapter.service.dto.Product;
 import com.smarchoice.product.adapter.service.resource.Provider;
 import org.slf4j.Logger;
@@ -9,15 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
-    private RedisTemplate template;
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductRepositoryImpl.class);
-
+    private final RedisTemplate template;
     @Value("${cache.product.group.lifespan}")
     private long cacheLifeSpan;
 

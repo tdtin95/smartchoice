@@ -13,9 +13,9 @@ public class IncompleteExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IncompleteException.class)
     protected ResponseEntity<Object> handleConflict(
-            RuntimeException ex, WebRequest request) {
+        RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, "At lease one provider is unreadable",
-                new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, request);
+            new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, request);
     }
 }
 

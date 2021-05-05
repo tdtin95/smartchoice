@@ -1,9 +1,8 @@
 package com.smarchoice.product.adapter.service.repository;
 
+import java.util.List;
 import com.smarchoice.product.adapter.service.dto.Product;
 import com.smarchoice.product.adapter.service.resource.Provider;
-
-import java.util.List;
 
 public interface ProductRepository {
 
