@@ -9,4 +9,6 @@ import org.springframework.util.MultiValueMap;
  */
 public interface ProviderResource<T> {
     List<T> findProduct(MultiValueMap<String, String> criterion);
+
+    Provider getProvider();
 }

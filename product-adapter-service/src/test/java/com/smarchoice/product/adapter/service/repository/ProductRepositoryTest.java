@@ -55,7 +55,7 @@ public class ProductRepositoryTest {
     public void isExist_shouldClearTheCache_when_recordExpires() throws InterruptedException {
         Product product = ProductTestUtil.createProduct(Provider.SHOPEE);
         repository.save(product.getProductName(), Provider.SHOPEE, List.of(product));
-        Thread.sleep(5000);
+        Thread.sleep(6000);
         assertFalse(repository.isExist(product.getProductName(), Provider.SHOPEE));
     }
 

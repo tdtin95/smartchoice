@@ -42,8 +42,8 @@ public class ProductService {
 
         List<Callable<List<Product>>> tasks = new ArrayList<>();
 
-        for (Map.Entry<Provider, ProviderResource> resource : resourceFactory.getResources().entrySet()) {
-            tasks.add(createTask(productName, resource.getKey(), resource.getValue(), queryParams));
+        for (ProviderResource resource : resourceFactory.getResources()) {
+            tasks.add(createTask(productName, resource.getProvider(), resource, queryParams));
         }
 
         ExecutorService executor = Executors.newCachedThreadPool();

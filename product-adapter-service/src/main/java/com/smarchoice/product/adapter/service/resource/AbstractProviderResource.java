@@ -2,6 +2,7 @@ package com.smarchoice.product.adapter.service.resource;
 
 import java.util.List;
 import com.smarchoice.product.adapter.service.dto.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,8 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public abstract class AbstractProviderResource implements ProviderResource<Product> {
 
     protected abstract String getServerUrl();
+    protected abstract RestTemplate getRestTemplate();
 
-    protected abstract Provider getProvider();
 
     @Override
     public List<Product> findProduct(MultiValueMap<String, String> criterion) {
@@ -25,7 +26,7 @@ public abstract class AbstractProviderResource implements ProviderResource<Produ
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getServerUrl()).queryParams(criterion);
         HttpEntity<Product> requestEntity = new HttpEntity<>(headers);
         ResponseEntity<List<Product>> response =
-            new RestTemplate().exchange(
+            getRestTemplate().exchange(
                 builder.toUriString(),
                 HttpMethod.GET,
                 requestEntity,
