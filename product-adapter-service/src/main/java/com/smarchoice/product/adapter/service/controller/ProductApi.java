@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping(ProductApi.PRODUCT_PATH)
 public interface ProductApi {
 
-    String PRODUCT_PATH = "/products";
+    String PRODUCT_PATH = "/api/products";
 
     @GetMapping
     ResponseEntity<List<Product>> search(@RequestParam MultiValueMap<String, String> allRequestParams);

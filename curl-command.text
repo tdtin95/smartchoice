@@ -10,5 +10,5 @@ curl --location --request POST 'localhost:7777/auth/realms/master/protocol/openi
 
 #Get Product information from 3rd provider
 
-curl --location --request GET 'localhost:8080/product-information?productName=product1%20name' \
+curl --location --request GET 'localhost:9080/api/product-information?productName=product1%20name' \
 --header 'Authorization: Bearer {{your access token}}'
