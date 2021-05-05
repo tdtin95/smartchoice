@@ -1,13 +1,5 @@
 package com.smarchoice.product.adapter.service.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import com.smarchoice.product.adapter.service.dto.Product;
 import com.smarchoice.product.adapter.service.event.ProductProducer;
 import com.smarchoice.product.adapter.service.exception.IncompleteException;
@@ -21,11 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 
 @Service
 public class ProductService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
+    public static final String PRODUCT_NAME = "productName";
     private ResourceFactory resourceFactory;
     private ProductRepository repository;
     private ProductProducer productProducer;
@@ -38,11 +38,11 @@ public class ProductService {
      * @return products that consumed from providers
      */
     public List<Product> getProducts(MultiValueMap<String, String> queryParams) {
-        String productName = queryParams.getFirst("productName");
+        String productName = queryParams.getFirst(PRODUCT_NAME);
 
         List<Callable<List<Product>>> tasks = new ArrayList<>();
 
-        for (ProviderResource resource : resourceFactory.getResources()) {
+        for (ProviderResource<? extends Product> resource : resourceFactory.getResources()) {
             tasks.add(createTask(productName, resource.getProvider(), resource, queryParams));
         }
 
@@ -56,7 +56,7 @@ public class ProductService {
                     if (consumedProducts != null) {
                         products.addAll(consumedProducts);
                     }
-                } catch (ExecutionException e) {
+                } catch (Exception e) {
                     LOGGER.error("Cannot not get result", e);
                     throw new IncompleteException(e.getMessage(), e);
                 }
