@@ -88,11 +88,11 @@ public class ProductService {
                                                ProviderResource resource,
                                                MultiValueMap<String, String> queryParams) {
         return () -> {
-            if (repository.isProductGroupExist(productName, provider)) {
-                return repository.getProductGroup(productName, provider);
+            if (repository.isExist(productName, provider)) {
+                return repository.search(productName, provider);
             }
             List<Product> products = resource.findProduct(queryParams);
-            repository.saveProductGroup(productName, provider, products);
+            repository.save(productName, provider, products);
             return products;
         };
     }

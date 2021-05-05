@@ -13,7 +13,7 @@ public interface ProductRepository {
      * @param provider 3rd party provider {@link Provider}
      * @return if product group existed
      */
-    boolean isProductGroupExist(String productName, Provider provider);
+    boolean isExist(String productName, Provider provider);
 
     /**
      * Get list of product stored in redis
@@ -21,7 +21,7 @@ public interface ProductRepository {
      * @param provider 3rd party provider {@link Provider}
      * @return list of product belongs to a provider
      */
-    List<Product> getProductGroup(String productName, Provider provider);
+    List<Product> search(String productName, Provider provider);
 
     /**
      * Save a list of product for providers (tiki, lazada, shopee) based on product name
@@ -30,7 +30,7 @@ public interface ProductRepository {
      * @param provider 3rd party provider {@link Provider}
      * @param products list of product that to be saved
      */
-    void saveProductGroup(String productName, Provider provider, List<Product> products);
+    void save(String productName, Provider provider, List<Product> products);
 
 
     /**
@@ -40,14 +40,14 @@ public interface ProductRepository {
      * @param provider 3rd party provider {@link Provider}
      * @param products list of product that to be saved
      */
-    void updateProductGroup(String productName, Provider provider, List<Product> products);
+    void update(String productName, Provider provider, List<Product> products);
 
     /**
      * delete a list of product for providers (tiki, lazada, shopee) based on product name
      * @param provider 3rd party provider {@link Provider}
      * @param productName product name (e.g : pencil)
      */
-    void deleteProductGroup(String productName, Provider provider);
+    void delete(String productName, Provider provider);
 
 
 }

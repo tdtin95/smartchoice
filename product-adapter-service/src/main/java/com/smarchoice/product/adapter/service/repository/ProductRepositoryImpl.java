@@ -26,17 +26,17 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public boolean isProductGroupExist(String productName, Provider provider) {
+    public boolean isExist(String productName, Provider provider) {
         return template.hasKey(buildProductGroupIdentifier(productName, provider));
     }
 
     @Override
-    public List<Product> getProductGroup(String productName, Provider provider) {
+    public List<Product> search(String productName, Provider provider) {
         return template.opsForList().range(buildProductGroupIdentifier(productName, provider), 0, -1);
     }
 
     @Override
-    public void saveProductGroup(String productName, Provider provider, List<Product> products) {
+    public void save(String productName, Provider provider, List<Product> products) {
         String identifier = buildProductGroupIdentifier(productName, provider);
         LOGGER.info("Save {}", identifier);
         template.opsForList().rightPushAll(identifier, products);
@@ -44,16 +44,16 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void updateProductGroup(String productName, Provider provider, List<Product> products) {
+    public void update(String productName, Provider provider, List<Product> products) {
         String identifier = buildProductGroupIdentifier(productName, provider);
         LOGGER.info("update {}", identifier);
-        deleteProductGroup(productName, provider);
-        saveProductGroup(productName, provider, products);
+        delete(productName, provider);
+        save(productName, provider, products);
         template.expire(identifier, cacheLifeSpan, TimeUnit.SECONDS);
     }
 
     @Override
-    public void deleteProductGroup(String productName, Provider provider) {
+    public void delete(String productName, Provider provider) {
         template.delete(buildProductGroupIdentifier(productName, provider));
     }
 
