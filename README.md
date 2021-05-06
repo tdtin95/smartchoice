@@ -127,13 +127,11 @@ I choose Keycloak for this assignment, which is a strong Auth Server, easy to co
 - Install Java 11
 - Docker 
 - A linux execution command line(since my installation script is written in linux).
+- Set dock desktop Ram resources at least 4GB (it iss would be great to be 8GB )
+![docker setup](docs/docker-config.png)
 ## Install
 ### Run Enviroment setup
-- At root of project, run `docker-compose up`, redis, keycloak, kafka,mongoDb will be installed.
-### Run Microservice
-- Build services by go to service folder and run : `gradlew assemble` or `gradlew build`
-- Go to /build/libs/ run : `java -jar <project-name>.jar`
-- You can directly run spring boot command at service folder : `gradlew bootRun`
+At root of project run install.sh to install all the thing
 ### Service port
 | Service                 | Port |
 | ----------------------- | ---- |

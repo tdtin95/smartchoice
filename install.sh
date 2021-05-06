@@ -1,5 +1,6 @@
 project=(product-adapter-service product-service audit-service registry-service api-gateway)
-#project=(product-adapter-service)
+
+
 for name in "${project[@]}"
 do	
 	echo "Building project $name"
@@ -8,4 +9,5 @@ do
     docker build -t $name .
 	cd ..
 done
-docker-compose up -d
+
+docker-compose up --remove-orphans
