@@ -24,13 +24,14 @@ decrease the cost and improve the effectiveness of the application.
 
 In order to satisfy the requirement, we need to build Microservice system that will be decribed in the following picture : 
 
-//PICTURE
+![High Level](docs/high-level-design.png)
 
 - **product-adapter-service** : service to call external 3rd party providers' api (Tiki, Lazada, Shopee...) to fetch/search products from them. The **product-adapter-service** is the only service that has the right to access to provider's api, no direct called will be made to 3rd without going through adapter service.
 - **product-service** : the main service that the UI/Customer communicates directly to. This service will call **product-adapter-service** to search a particular product information from 3rd provider.
 - **audit-service** : the service used for keep tracking the search history of user
 - **api-gateway** : Route along services via a single point. It helps to access to internal services without knowing their host and port. Request will be redirected to exact service need to be serve by situations.
 - **registry-service** : Service's registration and discovery in our system. It helps API Gateway routing requests by service name instead of hard-code URL
+- **authentication-server** : An Auth server to support OAuth sercurity as well as provide the security protection for service call.
 
 
 # Microservice Design
@@ -102,6 +103,73 @@ In production environments, the host and port of a service are frequently change
 We use spring-cloud-netflix-client to route external request to correct service
 We use spring-boot-starter-oauth2-resource-server as resource server and secure the request.
 When use make a call to services, we also add username as the header to separated request alongs users and for keep tracking in audit-service, then we use ZuulFilter.
+
+## Registry Service
+We need to support api gateway to discover services endpoint, api gateway just need to access to service via its registration name.
+
+### Service Design
+We use spring-cloud-starter-netflix-eureka-server to let services register itself to Eureka server, and help api gateway access to them without knowing the real URL.
+
+## Authentication Server
+An Auth server to support OAuth sercurity as well as provide the security protection for service call.
+### Design
+User will be authenticated by auth server, after that a jwt token will be generated, API gateway will authenticate it with spring-boot-starter-security, username will be extracted and progated through services by ZuulFilter.
+
+I choose Keycloak for this assignment, which is a strong Auth Server, easy to configure, flexible, API support ,... Other replacements can be Okta, Google OAuth2,...
+
+# Whole system design
+
+![System design](docs/fullservice-flow.png)
+
+# How to install
+
+## Prerequisite
+- Install Java 11
+- Docker 
+- A linux execution command line(since my installation script is written in linux).
+## Install
+### Run Enviroment setup
+- At root of project, run `docker-compose up`, redis, keycloak, kafka,mongoDb will be installed.
+### Run Microservice
+- Build services by go to service folder and run : `gradlew assemble` or `gradlew build`
+- Go to /build/libs/ run : `java -jar <project-name>.jar`
+- You can directly run spring boot command at service folder : `gradlew bootRun`
+### Service port
+| Service                 | Port |
+| ----------------------- | ---- |
+| api-gateway             | 9080 |
+| product-service         | 9081 |
+| product-adapter-service | 9082 |
+| audit-service           | 9083 |
+| registry-service        | 8761 |
+| keycloak                | 7777 |
+| mongo                   | 27017|
+| redis                   | 6379 |
+| kafka                   | 9092 |
+
+# Applied Principles
+
+# Design Pattern
+
+# Library
+
+# Improve to be perfect
+This section is my idea that can improve the current system design, since time is limited, I cannot archive all of them, these points should be considered to implemented in real system.
+
+## Logging system
+Loggin roles a important part in microservices design, ELK stack can be applied to make logs centralized, easy to track, anylized and report. In the flow of service calling, when a service call a service, we can append to service id or service uid and send as a header to next service, then if an error occurs, we can know exactly which service is broken.
+
+## Configuration System
+Currently, configurations take place in spring application.propertise, it is not reactive and flexible in runtime, suppose that we want the pre-config a confuguration that will be apply in a specific of date (e.g : X-mas discount, 11-11 sale,...) then current design is not fit. A configuration service or a configuration system (eg. Spring configuration server) should be implemented.
+
+## Registry service and loadbalancing replacement
+
+We can use Kubernetes to replace registry service to discover mircroservices, then bottle neck at registry service will be solved. Kubernetes is perfect choice to manage container, deployments or CI/CD integrations.
+
+## Authentication adapter service
+We need to make the set up of authentication server automatic and flexible, and well support for CI/CD pipline. An adapter service to use authencation service API to support configuring security is also a need in microservices system.
+
+
 
 
 
