@@ -2,6 +2,8 @@ version: "3"
 
 services:
   mongo:
+    container_name: mongo
+    hostname: mongo
     image: mongo
     volumes:
       - mongo-volume:/data/db
@@ -13,6 +15,8 @@ services:
     restart: unless-stopped
 
   redis:
+    container_name: redis
+    hostname: redis
     image: redis:6-alpine
     volumes:
       - redis-volume:/data
@@ -20,6 +24,8 @@ services:
       - 6379:6379
     restart: unless-stopped
   keycloak:
+    container_name: keycloak
+    hostname: keycloak
     image: quay.io/keycloak/keycloak:11.0.0
     environment:
       KEYCLOAK_USER: admin
@@ -33,18 +39,72 @@ services:
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
   kafka:
+    container_name: kafka
+    hostname: kafka
     image: "bitnami/kafka:latest"
     ports:
-      - "9092:9092"
+      - "9093:9093"
     environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
     depends_on:
       - zookeeper
-
+  registry-service:
+    container_name: registry-service
+    hostname: registry-service
+    image: registry-service
+    restart: on-failure
+    depends_on:
+      - redis
+      - kafka
+    ports:
+      - 8761:8761
+  product-adapter-service:
+    container_name: product-adapter-service
+    hostname: product-adapter-service
+    image: product-adapter-service
+    restart: on-failure
+    depends_on:
+      - redis
+      - kafka
+    ports:
+      - 9082:9082
+  product-service:
+    container_name: product-service
+    hostname: product-service
+    image: product-service
+    restart: on-failure
+    depends_on:
+      - redis
+      - kafka
+    ports:
+      - 9081:9081
+  audit-service:
+    container_name: audit-service
+    hostname: audit-service
+    image: audit-service
+    restart: on-failure
+    depends_on:
+      - mongo
+      - kafka
+    ports:
+      - 9083:9083
+  api-gateway:
+    container_name: api-gateway
+    hostname: api-gateway
+    image: api-gateway
+    restart: on-failure
+    depends_on:
+      - product-service
+      - product-adapter-service
+      - registry-service
+      - audit-service
+    ports:
+      - 9080:9080
 volumes:
   postgres-volume: {}
   mongo-volume: {}
