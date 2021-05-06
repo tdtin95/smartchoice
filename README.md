@@ -147,6 +147,11 @@ I choose Keycloak for this assignment, which is a strong Auth Server, easy to co
 | redis                   | 6379 |
 | kafka                   | 9092 |
 
+### Testing command
+Use command in test-command.md to test the system
+
+You can also import postman collection and test via postman postman-collection.json
+
 # Applied Principles
 
 # Design Pattern
