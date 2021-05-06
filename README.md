@@ -72,3 +72,5 @@ Product service as a consumer also listens on Kafka queue, whenever it recieve a
 Each product will be grouped in a ProductGroup that contains information from all 3rd providers
 
 ![ProductGroup Schema](docs/ProductGroup.png)
+
+## Audit service
