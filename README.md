@@ -74,3 +74,35 @@ Each product will be grouped in a ProductGroup that contains information from al
 ![ProductGroup Schema](docs/ProductGroup.png)
 
 ## Audit service
+The service used for keep tracking the search history of user, whenever user makes a search product call, this information will be tracked.
+
+### Service design
+Whenever a search request has been made to product-service, we use spring AOP and define the PointCut and give it and Advice to record the search. 
+
+Due to the failure to store customer activity should have no impact on the function or performance of the Rest APIs, therefore we use Kafka as message queue with product-service as a Producer(Source) and audit-service as a Consumer(Sink). Then if the audit-service service is dead or unreachable, there is no impact to product-service, and the message will be safe in queue, the data will not be lost
+
+### Database design
+We need to keep track which productName that user search, timestamp, performed by which user.
+What we need from a database is 
+- Long-term storage.
+- Handle large data, in short time (up to the traffic to product-service)
+- None-relational database
+- Flexible data structure
+  
+Then mongoDb is a good fit.
+
+![History Schema](docs/History.png)
+
+
+## Api Gateway
+
+In production environments, the host and port of a service are frequently change due to the scalability of the system, a lot of instance of services will be destroyed or created due to the traffic and system need, handle the endpoint of service is really a challange. Api gateway is solution that external request just need to communicate to service systems via a single point, api gateway will decide which service will be called base on which request, load balancing is also supported to redict to instances of services. Api gateway also helps for processing common request needs as : propagting jwt token, propagating header , ssl certificate,...
+
+### Service Design
+We use spring-cloud-netflix-client to route external request to correct service
+We use spring-boot-starter-oauth2-resource-server as resource server and secure the request.
+When use make a call to services, we also add username as the header to separated request alongs users and for keep tracking in audit-service, then we use ZuulFilter.
+
+
+
+
