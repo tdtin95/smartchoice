@@ -65,6 +65,15 @@ public class ProductControllerTest {
     }
 
     @Test
+    public void getProductInformation_shouldReturnBadRequest_when_headerIsMissed() {
+        RestAssuredMockMvc.given()
+            .auth().none()
+            .get(PRODUCT_INFORMATION_PATH)
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
     public void getProductInformation_shouldReturnEmptyList_when_paramIsEmpty() {
         RestAssuredMockMvc.given()
             .auth().none()

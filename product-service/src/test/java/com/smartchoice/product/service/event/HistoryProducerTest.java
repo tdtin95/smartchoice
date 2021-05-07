@@ -1,4 +1,4 @@
-package com.smartchoice.product.service.listener;
+package com.smartchoice.product.service.event;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,4 +1,4 @@
-package com.smartchoice.product.service.listener;
+package com.smartchoice.product.service.event;
 
 import com.smartchoice.product.service.dto.Product;
 import com.smartchoice.product.service.entity.ProductGroup;

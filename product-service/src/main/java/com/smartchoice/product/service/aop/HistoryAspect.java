@@ -1,7 +1,7 @@
 package com.smartchoice.product.service.aop;
 
 import com.smartchoice.product.service.dto.History;
-import com.smartchoice.product.service.listener.HistoryProducer;
+import com.smartchoice.product.service.event.HistoryProducer;
 import com.smartchoice.product.service.request.UserInformation;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
