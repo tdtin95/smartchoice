@@ -26,7 +26,7 @@ In order to satisfy the requirement, we need to build Microservice system that w
 
 ![High Level](docs/high-level-design.png)
 
-- **product-adapter-service** : service to call external 3rd party providers' api (Tiki, Lazada, Shopee...) to fetch/search products from them. The **product-adapter-service** is the only service that has the right to access to provider's api, no direct called will be made to 3rd without going through adapter service.
+- **product-adapter-service** : service to call external 3rd party providers' api (Tiki, Lazada, Shopee...) to fetch/search products from them. The **product-adapter-service** is the only service that has the right to access to provider's api, no direct call will be made to 3rd without going through adapter service.
 - **product-service** : the main service that the UI/Customer communicates directly to. This service will call **product-adapter-service** to search a particular product information from 3rd provider.
 - **audit-service** : the service used for keep tracking the search history of user
 - **api-gateway** : Route along services via a single point. It helps to access to internal services without knowing their host and port. Request will be redirected to exact service need to be serve by situations.
@@ -38,14 +38,14 @@ In order to satisfy the requirement, we need to build Microservice system that w
 
 ## Product Apdater Service
 
-Access to 3rd parties' api/library, this service role plays as adapter that call 3rd parties, other services do not allowed to use or call directly to 3rd api. The benefit it will standardlize the result that we get from 3rd to actual information we want to achieve and return them in the same structure as we define in product-adapter-service. In the future if we want to add more provider or their apis are changes, we just need to update product-adapter-service, other services do not need to care, that means we narrow the risk and maintainance cost.
+Access to 3rd parties' api/library, this service role plays as adapter that call 3rd parties, other services do not allowed to use or call directly to 3rd api. The benefit is that it will standardlize the result that we get from 3rd to actual information we want to achieve and return them in the same structure as we define in product-adapter-service. In the future if we want to add more provider or their apis are changed, we just need to update product-adapter-service, other services do not need to care, that means we narrow the risk and maintainance cost.
 ### Service Design 
 
 Each call to 3rd will be charged, we need to reduced making call to 3rd api as much as possible. Since all the data must be completely returned from 3rd parties before the API can return to the website, we can asynchronously call to those apis and temporary cache the result base on **product name and provider name** to reduce to call to 3rd in short time, if one of those providers is unreachable or down, we just need to retry to call on that service, the result from other providers that we succesfully called before will be get from cache, instead of remake the full call of all providers. So what we need are :
 
 - Short-tearm storage
 - Fast read time
-- List of product stored base on product namd and its provider
+- List of product stored base on product name and its provider
 
 A HashMap database structure as **REDIS** seems to meet our requirement.
 
@@ -65,7 +65,7 @@ Product service receive search request to return the product information from 3r
 
 When product-service recieve a request to get information for a product , it will call product-adapter-service to get those information from providers. Each information for a product will be grouped by productName call ProductGroup. In order to make the system performance and saving the cost, each time we have a ProductGroup information, we will cache it to Redis (note that it will be a redis separated databa from product-adapter-service, redis support us to have multiple databse in the same Redis server). This cache can have longer lifespan, since product information of a product does not change too frequently, cache lifespan is surely configurable.
 
-Product service as a consumer also listens on Kafka queue, whenever it recieve a product information, it will update Redis cache. In scalable perspective, when a lot of requests are made to multiple product-service instance to search to same productName, if at least one instance have recieved that product information from product-adapter-service and cached it, then other intances just get from cache instead of make a call to product-adapter-service. This approach can reduce calls to product-adapter-service, fast reaction. If one instance of product service is dead, when a new instance created, it also can get information from message queue or cache. The interaction between product-service and product-adapter-service is decribe in the following picture
+Product service as a consumer also listens on Kafka queue, whenever it recieve a product information, it will update Redis cache. In scalable perspective, when a lot of requests are made to multiple product-service instance to search to same productName, if at least one instance have recieved that product information from product-adapter-service and cached it, then other intances just get from cache instead of make a call to product-adapter-service. This approach can reduce calls to product-adapter-service, fast reaction. If one instance of product service is dead, when a new instance created, it also can get information from message queue or cache. The interaction between product-service and product-adapter-service is decribed in the following picture
 
 ![Product flow](docs/product-flow.png)
 
@@ -97,12 +97,14 @@ Then mongoDb is a good fit.
 
 ## Api Gateway
 
-In production environments, the host and port of a service are frequently change due to the scalability of the system, a lot of instance of services will be destroyed or created due to the traffic and system need, handle the endpoint of service is really a challange. Api gateway is solution that external request just need to communicate to service systems via a single point, api gateway will decide which service will be called base on which request, load balancing is also supported to redict to instances of services. Api gateway also helps for processing common request needs as : propagting jwt token, propagating header , ssl certificate,...
+In production environments, the host and port of a service are frequently change due to the scalability of the system, a lot of instance of services will be destroyed or created due to the traffic and system need, managing the endpoint of service is really a challange. Api gateway is a solution that external request just need to communicate to service systems via a single point, api gateway will decide which service will be called base on which request, load balancing is also supported to redirect to instances of services. Api gateway also helps for processing common request needs as : propagting jwt token, propagating header , ssl certificate,...
 
 ### Service Design
-We use spring-cloud-netflix-client to route external request to correct service
+We use spring-cloud-netflix-client to route external request to correct service.
+
 We use spring-boot-starter-oauth2-resource-server as resource server and secure the request.
-When use make a call to services, we also add username as the header to separated request alongs users and for keep tracking in audit-service, then we use ZuulFilter.
+
+User will be authenticated by auth server, after that a jwt token will be generated, API gateway will authenticate it with spring-boot-starter-security, username will be extracted and progated through services by ZuulFilter. An alternative is using nginx , it is more powerful, but for this assignment, Zuulfilter is the great choice to quickly bootstrap our system.
 
 ## Registry Service
 We need to support api gateway to discover services endpoint, api gateway just need to access to service via its registration name.
@@ -113,7 +115,6 @@ We use spring-cloud-starter-netflix-eureka-server to let services register itsel
 ## Authentication Server
 An Auth server to support OAuth sercurity as well as provide the security protection for service call.
 ### Design
-User will be authenticated by auth server, after that a jwt token will be generated, API gateway will authenticate it with spring-boot-starter-security, username will be extracted and progated through services by ZuulFilter. An alternative is using nginx , it is more powerful, but for this assignment, Zuulfilter is the great choice to quickly bootstrap our system.
 
 I choose Keycloak for this assignment, which is a strong Auth Server, easy to configure, flexible, API support ,... Other replacements can be Okta, Google OAuth2,...
 
@@ -129,8 +130,8 @@ I choose Keycloak for this assignment, which is a strong Auth Server, easy to co
 - A linux execution command line(since my installation script is written in linux).
 ## Install
 ### Run Enviroment setup
-- At root of project run install.sh to build and prepare environment (Kafka, Redis, Keycloak, mongodb)
-- build folder will be generated, run all jar inside this folder by command `java -jar <name>.jar` 
+- At root of project run [install.sh](install.sh) to build and prepare environment (Kafka, Redis, Keycloak, mongodb)
+- A folder `build` will be generated at root, run all jar inside it by command `java -jar <name>.jar` 
 
 ### Service port
 | Service                 | Port |
@@ -146,9 +147,8 @@ I choose Keycloak for this assignment, which is a strong Auth Server, easy to co
 | kafka                   | 9092 |
 
 ### Testing command
-Use command in test-command.md to test the system
-
-You can also import postman collection and test via postman postman-collection.json
+Use command in [test-command.md](test-command.md) to test the system
+You can also import postman collection and test via postman [smartchoice.postman_collection.json](smartchoice.postman_collection.json)
 
 # Applied Principles
 
@@ -158,7 +158,7 @@ You can also import postman collection and test via postman postman-collection.j
 - Use Spring IoC container to inject the dependency
 - Dependency is injected via constructor or setter
 ### DRY (Don't repeat your self)
-- Encapsulate business logic, calculated functions, etc. in on place and reuse it
+- Encapsulate business logic, calculated functions, etc. in one place and reuse it
 ### Single Responsibility Principle
 - Divide system to services, each service serves for an only responsibility. Service is organized by layers, each class in layzer has only one reponsibility.
 ### SOC (Separation of Concerns)
@@ -167,7 +167,7 @@ You can also import postman collection and test via postman postman-collection.j
 ### KISS (Keep it simple stupid)
 - Make the code simple, easy to understand, clean code.
 ### Low Coupling
-- Avoid making complex relationship between class
+- Avoid making complex relationship between classes
 - Use DI
 # Design Pattern
 
@@ -204,13 +204,13 @@ The basic structure of each service devide into these layer :
 - Junit5
 
 # Improve to be perfect
-This section is my idea that can improve the current system design, since time is limited, I cannot archive all of them, these points should be considered to implemented in real system.
+This section is my idea that can improve the current system design, since time is limited, I cannot archive all of them, these points should be considered to be implemented in real system.
 
 ## Logging system
 Loggin roles a important part in microservices design, ELK stack can be applied to make logs centralized, easy to track, anylized and report. In the flow of service calling, when a service call a service, we can append to service id or service uid and send as a header to next service, then if an error occurs, we can know exactly which service is broken.
 
 ## Configuration System
-Currently, configurations take place in spring application.propertise, it is not reactive and flexible in runtime, suppose that we want the pre-config a confuguration that will be apply in a specific of date (e.g : X-mas discount, 11-11 sale,...) then current design is not fit. A configuration service or a configuration system (eg. Spring configuration server) should be implemented.
+Currently, configurations take place in spring application.propertise, it is not reactive and flexible in runtime, suppose that we want to pre-config a confuguration that will be applied in a specific of date (e.g : X-mas discount, 11-11 sale,...) then current design is not fit. A configuration service or a configuration system (eg. Spring configuration server) should be implemented.
 
 ## Registry service and loadbalancing replacement
 

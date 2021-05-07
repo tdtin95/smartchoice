@@ -37,7 +37,7 @@ import static org.mockito.Mockito.times;
 public class ProductControllerTest {
 
     public static final String REST_FIELD_SIZE = "$.size()";
-    public static final String PRODUCTS_PATH = "/products";
+    public static final String PRODUCTS_PATH = "/api/products";
     public static final String PRODUCT_NAME = "productName";
 
 

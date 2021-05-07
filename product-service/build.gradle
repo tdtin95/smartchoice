@@ -38,6 +38,7 @@ dependencies {
     testImplementation 'it.ozimov:embedded-redis:0.7.2'
     testImplementation'org.scala-lang:scala-library:2.12.11'
     testImplementation 'io.rest-assured:spring-mock-mvc'
+    testImplementation 'io.rest-assured:xml-path:4.2.0'
 
 }
 

@@ -1,0 +1,247 @@
+{
+	"info": {
+		"_postman_id": "3d3591a8-742d-42ba-bdd5-cd00c28b00d6",
+		"name": "Smartchoice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Compare product",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "username",
+						"value": "tdtin",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:9080/api/product-information?productName=product2 name",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"product-information"
+					],
+					"query": [
+						{
+							"key": "productName",
+							"value": "product2 name"
+						},
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"token\", jsonData.access_token);\r",
+							"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);\r",
+							"postman.setEnvironmentVariable(\"id_token\", jsonData.id_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "admin-cli",
+							"type": "text"
+						},
+						{
+							"key": "secret_id",
+							"value": "fintech",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "refresh_token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJmYTg3NjVlZi1iMDVhLTQ2MTQtYjY3Ny0yOTk5MWVjNzZmNjIifQ.eyJleHAiOjE2MTg4MjcxNzMsImlhdCI6MTYxODgyNTM3MywianRpIjoiY2EwZWUwZGUtZmFkOS00YzA0LTk3NDEtZGExNzE0NDdmMjg2IiwiaXNzIjoiaHR0cDovL2ZwLWs4cy1zZXR1cC1hcHAubG9jYWwvYXV0aC9yZWFsbXMvZmludGVjaCIsImF1ZCI6Imh0dHA6Ly9mcC1rOHMtc2V0dXAtYXBwLmxvY2FsL2F1dGgvcmVhbG1zL2ZpbnRlY2giLCJzdWIiOiJlOWExNDg2Mi1mZWIyLTQzNzctYWJlNC1lMzY5ZDZjMTAyYjAiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoiZmludGVjaCIsInNlc3Npb25fc3RhdGUiOiJiMjlmZmY4ZC1lYjdhLTQ5NWMtYWJjNC04MzY2ZDg1OGFlZDYiLCJzY29wZSI6InByb2ZpbGUgZW1haWwifQ.26iVDxP-dbCmJ2I3YUlV5squ4friFFCFiA3ohF5BXjQ",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:7777/auth/realms/master/protocol/openid-connect/token",
+					"host": [
+						"localhost"
+					],
+					"port": "7777",
+					"path": [
+						"auth",
+						"realms",
+						"master",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product-adapter-service",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9080/api/products?productName=product1 name",
+					"host": [
+						"localhost"
+					],
+					"port": "9080",
+					"path": [
+						"api",
+						"products"
+					],
+					"query": [
+						{
+							"key": "productName",
+							"value": "product1 name"
+						},
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "mock shopee",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://608ced319f42b20017c3e613.mockapi.io/api/products?price=27",
+					"protocol": "https",
+					"host": [
+						"608ced319f42b20017c3e613",
+						"mockapi",
+						"io"
+					],
+					"path": [
+						"api",
+						"products"
+					],
+					"query": [
+						{
+							"key": "price",
+							"value": "27"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "mock  lazada",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://608ced319f42b20017c3e613.mockapi.io/api/lazadaproducts",
+					"protocol": "https",
+					"host": [
+						"608ced319f42b20017c3e613",
+						"mockapi",
+						"io"
+					],
+					"path": [
+						"api",
+						"lazadaproducts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "mock tiki",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://608ced319f42b20017c3e613.mockapi.io/api/tikiproducts",
+					"protocol": "https",
+					"host": [
+						"608ced319f42b20017c3e613",
+						"mockapi",
+						"io"
+					],
+					"path": [
+						"api",
+						"tikiproducts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

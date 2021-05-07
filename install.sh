@@ -5,7 +5,7 @@ for name in "${project[@]}"
 do	
 	echo "Building project $name"
 	cd $name
-	./gradlew build -x test
+	./gradlew build
     #docker build -t $name .
 	cp build/libs/$name-0.0.1-SNAPSHOT.jar ../build/$name.jar
 	cd ..

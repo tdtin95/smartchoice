@@ -39,7 +39,7 @@ public class ProductGroupRepositoryTest {
         Product product = createProduct();
         ProductGroup productGroup = new ProductGroup(product.getProductName(), List.of(product));
         repository.save(productGroup);
-        Thread.sleep(5000);
+        Thread.sleep(6000);
         Assertions.assertFalse(repository.existsById(product.getProductName()));
     }
 
