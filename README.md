@@ -252,10 +252,10 @@ The basic structure of each service devide into these layer :
 - Junit5
 
 # Improve to be perfect
-This section is my idea that can improve the current system design, since time is limited, I cannot archive all of them, these points should be considered to be implemented in real system.
+This section is my idea that can improve the current system design, in the scope of this assignment it may not to be neccessary, but these points should be considered to be implemented in real system.
 
 ## Logging system
-Loggin roles a important part in microservices design, ELK stack can be applied to make logs centralized, easy to track, anylized and report. In the flow of service calling, when a service call a service, we can append to service id or service uid and send as a header to next service, then if an error occurs, we can know exactly which service is broken.
+Logging roles a important part in microservices design, ELK stack can be applied to make logs centralized, easy to track, anylized and report. In the flow of service calling, when a service call a service, we can append to service id or service uid and send as a header to next service, then if an error occurs, we can know exactly which service is broken.
 
 ## Configuration System
 Currently, configurations take place in spring application.propertise, it is not reactive and flexible in runtime, suppose that we want to pre-config a confuguration that will be applied in a specific of date (e.g : X-mas discount, 11-11 sale,...) then current design is not fit. A configuration service or a configuration system (eg. Spring configuration server) should be implemented.
