@@ -113,7 +113,7 @@ We use spring-cloud-starter-netflix-eureka-server to let services register itsel
 ## Authentication Server
 An Auth server to support OAuth sercurity as well as provide the security protection for service call.
 ### Design
-User will be authenticated by auth server, after that a jwt token will be generated, API gateway will authenticate it with spring-boot-starter-security, username will be extracted and progated through services by ZuulFilter.
+User will be authenticated by auth server, after that a jwt token will be generated, API gateway will authenticate it with spring-boot-starter-security, username will be extracted and progated through services by ZuulFilter. An alternative is using nginx , it is more powerful, but for this assignment, Zuulfilter is the great choice to quickly bootstrap our system.
 
 I choose Keycloak for this assignment, which is a strong Auth Server, easy to configure, flexible, API support ,... Other replacements can be Okta, Google OAuth2,...
 
@@ -127,11 +127,11 @@ I choose Keycloak for this assignment, which is a strong Auth Server, easy to co
 - Install Java 11
 - Docker 
 - A linux execution command line(since my installation script is written in linux).
-- Set dock desktop Ram resources at least 4GB (it iss would be great to be 8GB )
-![docker setup](docs/docker-config.png)
 ## Install
 ### Run Enviroment setup
-At root of project run install.sh to install all the thing
+- At root of project run install.sh to build and prepare environment (Kafka, Redis, Keycloak, mongodb)
+- build folder will be generated, run all jar inside this folder by command `java -jar <name>.jar` 
+
 ### Service port
 | Service                 | Port |
 | ----------------------- | ---- |
@@ -141,7 +141,7 @@ At root of project run install.sh to install all the thing
 | audit-service           | 9083 |
 | registry-service        | 8761 |
 | keycloak                | 7777 |
-| mongo                   | 27017|
+| mongodb                 | 27017|
 | redis                   | 6379 |
 | kafka                   | 9092 |
 
@@ -152,9 +152,56 @@ You can also import postman collection and test via postman postman-collection.j
 
 # Applied Principles
 
+### YAGNI (You aren't gonna need it)
+- Do not implement something util we really need it.
+### Inversion of Control
+- Use Spring IoC container to inject the dependency
+- Dependency is injected via constructor or setter
+### DRY (Don't repeat your self)
+- Encapsulate business logic, calculated functions, etc. in on place and reuse it
+### Single Responsibility Principle
+- Divide system to services, each service serves for an only responsibility. Service is organized by layers, each class in layzer has only one reponsibility.
+### SOC (Separation of Concerns)
+- Use microservices system to separate each service serves for one concern (get product, audit, ....)
+- Use AOP to handle cross-cutting concern (audit user when he searchs something)
+### KISS (Keep it simple stupid)
+- Make the code simple, easy to understand, clean code.
+### Low Coupling
+- Avoid making complex relationship between class
+- Use DI
 # Design Pattern
 
-# Library
+- Factory Pattern ([ResourceFactory.java](product-adapter-service/src/main/java/com/smarchoice/product/adapter/service/resource/ResourceFactory.java))
+- Builder Pattern (using Lombok) ([Product.class](product-service/src/main/java/com/smartchoice/product/service/dto/Product.java))
+- Dependency Injection (Spring DI)
+- Strategy pattern
+
+# Folder Structure And Library Usage
+## Folder Structure
+The basic structure of each service devide into these layer :
+- Controller : define endpoint , recieve request from client 
+- Service : Handle businsess logic
+- Repository : communicate with database
+- Entity : entity to be persisted to database
+- resource : contains rest client resouces to call other services
+## Library usage
+### Development libraries
+- spring-boot-starter-web : to build rest service
+- spring-boot-starter-data-redis : to connect to Redis database
+- spring-kafka : to interact with kafka
+- spring-boot-starter-actuator : to check application health
+- spring-cloud-starter-netflix-eureka-client : to register service to Euraka service in registry-service
+- spring-cloud-starter-netflix-eureka-server : to create Eureka server in registry-service
+- spring-boot-starter-aop : to use aop to audit user
+- spring-boot-starter-data-mongodb : to connect to mongodb
+- spring-cloud-starter-netflix-zuul : to route request as a proxy server
+- spring-boot-starter-oauth2-resource-server : use oauth2 resource server for security
+- lombok : to remove the boilerplate code.
+### Test libraries
+- io.rest-assured:spring-mock-mvc : to write intergration test on endpoint
+- it.ozimov:embedded-redis : to use embedded redis
+- spring-kafka-test : to test kafka
+- Junit5
 
 # Improve to be perfect
 This section is my idea that can improve the current system design, since time is limited, I cannot archive all of them, these points should be considered to implemented in real system.
@@ -170,7 +217,7 @@ Currently, configurations take place in spring application.propertise, it is not
 We can use Kubernetes to replace registry service to discover mircroservices, then bottle neck at registry service will be solved. Kubernetes is perfect choice to manage container, deployments or CI/CD integrations.
 
 ## Authentication adapter service
-We need to make the set up of authentication server automatic and flexible, and well support for CI/CD pipline. An adapter service to use authencation service API to support configuring security is also a need in microservices system.
+We need to make the set up of authentication server automatic and flexible, and well-support for CI/CD pipline, when you want to bootstrap our application. An adapter service to use authencation service API to support configuring security is also a need in microservices system.
 
 
 

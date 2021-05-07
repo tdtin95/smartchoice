@@ -33,14 +33,6 @@ public class KafkaProducerConfig {
         return new KafkaAdmin(configs);
     }
 
-    //For assignment we just init partition of topic as one
-    //In real production, Kafka server should be set up by operation admin
-    //base on the need of system
-    @Bean
-    public NewTopic historyTopic() {
-        return new NewTopic(historyTopicName, 1, (short) 1);
-    }
-
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
