@@ -23,7 +23,7 @@ services:
       - 6379:6379
     restart: unless-stopped
   keycloak:
-    image: quay.io/keycloak/keycloak:11.0.0
+    image: quay.io/keycloak/keycloak:12.0.0
     container_name: keycloak
     hostname: keycloak
     environment:
@@ -49,6 +49,10 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
+  zipkin:
+    image: "openzipkin/zipkin"
+    ports:
+      - "9411:9411"
 volumes:
   mongo-volume: {}
   redis-volume: {}
