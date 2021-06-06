@@ -36,10 +36,32 @@ public class ProductAdapterServiceResource {
         this.restTemplate = restTemplate;
     }
 
-    @HystrixCommand(fallbackMethod = "handleConnectTimeOut",
-            commandProperties = {@HystrixProperty(
+    @HystrixCommand(
+            fallbackMethod = "handleConnectTimeOut",
+            threadPoolKey = "productServiceCallProductAdapter",
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value = "30"),
+                    @HystrixProperty(name = "maxQueueSize", value = "10"),
+            },
+            commandProperties = {
+                    @HystrixProperty(
                     name = "execution.isolation.thread.timeoutInMilliseconds",
-                    value = "10000")})
+                    value = "10000"),
+                    @HystrixProperty(
+                            name = "circuitBreaker.requestVolumeThreshold",
+                            value = "10"),
+                    @HystrixProperty(
+                            name = "circuitBreaker.errorThresholdPercentage",
+                            value = "75"),
+                    @HystrixProperty(
+                            name = "circuitBreaker.sleepWindowInMilliseconds",
+                            value = "7000"),
+                    @HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds",
+                            value = "15000"),
+                    @HystrixProperty(
+                            name = "metrics.rollingStats.numBuckets",
+                            value = "5")}
+    )
     public List<Product> findProduct(MultiValueMap<String, String> criterion) {
         HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(10000);
         HttpHeaders headers = new HttpHeaders();
