@@ -1,4 +1,4 @@
-package com.smartchoice.product.service.config;
+package com.smartchoice.product.service.config.kafka;
 
 import com.smartchoice.product.service.dto.History;
 import org.apache.kafka.clients.admin.AdminClientConfig;

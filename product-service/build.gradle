@@ -26,12 +26,15 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
 
 
+
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.2.3.RELEASE'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'redis.clients:jedis'
+    implementation 'org.keycloak:keycloak-spring-boot-starter:11.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     compileOnly 'org.projectlombok:lombok'
 

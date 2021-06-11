@@ -1,4 +1,4 @@
-package com.smartchoice.product.service.config;
+package com.smartchoice.product.service.config.kafka;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;

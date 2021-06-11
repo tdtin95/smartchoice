@@ -1,4 +1,4 @@
-package com.smartchoice.product.service.config;
+package com.smartchoice.product.service.config.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

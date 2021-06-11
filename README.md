@@ -41,7 +41,7 @@
     - [Development libraries](#development-libraries)
     - [Test libraries](#test-libraries)
 - [Improve to be perfect](#improve-to-be-perfect)
-  - [Logging system](#logging-system)
+  - [Logging system (Update : add sleuth and zipkin June 5th 2021)](#logging-system-update--add-sleuth-and-zipkin-june-5th-2021)
   - [Configuration System](#configuration-system)
   - [Registry service and loadbalancing replacement](#registry-service-and-loadbalancing-replacement)
   - [Authentication adapter service](#authentication-adapter-service)
@@ -254,7 +254,7 @@ The basic structure of each service devide into these layer :
 # Improve to be perfect
 This section is my idea that can improve the current system design, in the scope of this assignment it may not to be neccessary, but these points should be considered to be implemented in real system.
 
-## Logging system
+## Logging system (Update : add sleuth and zipkin June 5th 2021)
 Logging roles a important part in microservices design, ELK stack can be applied to make logs centralized, easy to track, anylized and report. In the flow of service calling, when a service call a service, we can append to service id or service uid and send as a header to next service, then if an error occurs, we can know exactly which service is broken.
 
 ## Configuration System
