@@ -1,0 +1,33 @@
+server:
+  port: 8070
+spring:
+  zipkin:
+    baseUrl: http://localhost:9411
+  application:
+    name: spring-cloud-gateway
+  cloud:
+    loadbalancer.ribbon.enabled: false
+    gateway:
+      routes:
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/product-information/**
+          filters:
+            - RemoveRequestHeader= Cookie,Set-Cookie
+        - id: product-adapter-service
+          uri: lb://product-adapter-service
+          predicates:
+            - Path=/api/products/**
+          filters:
+            - RemoveRequestHeader= Cookie,Set-Cookie
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:7777/auth/realms/master/protocol/openid-connect/certs
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
