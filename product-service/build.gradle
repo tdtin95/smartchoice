@@ -36,6 +36,7 @@ dependencies {
     implementation 'org.keycloak:keycloak-spring-boot-starter:11.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+
     compileOnly 'org.projectlombok:lombok'
 
     annotationProcessor 'org.projectlombok:lombok'

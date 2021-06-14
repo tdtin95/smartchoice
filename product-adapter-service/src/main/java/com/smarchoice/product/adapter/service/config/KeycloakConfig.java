@@ -1,17 +1,14 @@
-package com.smartchoice.product.service.config.keycloak;
+package com.smarchoice.product.adapter.service.config;
 
 import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
-import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory;
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,7 +21,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 public class KeycloakConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     private KeycloakClientRequestFactory keycloakClientRequestFactory;
@@ -55,15 +51,4 @@ public class KeycloakConfig extends KeycloakWebSecurityConfigurerAdapter {
         return new KeycloakSpringBootConfigResolver();
     }
 
-    @Bean
-    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    @LoadBalanced
-    public KeycloakRestTemplate keycloakTemplate() {
-        return new KeycloakRestTemplate(keycloakClientRequestFactory);
-    }
-
-    @Autowired
-    public void setKeycloakClientRequestFactory(KeycloakClientRequestFactory keycloakClientRequestFactory) {
-        this.keycloakClientRequestFactory = keycloakClientRequestFactory;
-    }
 }

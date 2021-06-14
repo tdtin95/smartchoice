@@ -28,6 +28,8 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'redis.clients:jedis'
+    implementation 'org.keycloak:keycloak-spring-boot-starter:11.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     implementation 'org.apache.commons:commons-collections4:4.4'
 
