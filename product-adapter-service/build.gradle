@@ -22,7 +22,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.2.3.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
     implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
@@ -30,6 +30,7 @@ dependencies {
     implementation 'redis.clients:jedis'
     implementation 'org.keycloak:keycloak-spring-boot-starter:11.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
     implementation 'org.apache.commons:commons-collections4:4.4'
 

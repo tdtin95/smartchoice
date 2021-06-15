@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: product-adapter-service
+  cloud:
+    config:
+      profile: default
+      uri: http://localhost:8080
