@@ -1,6 +1,6 @@
 spring:
   application:
-    name: product-adapter-service
+    name: spring-cloud-gateway
   cloud:
     config:
       profile: default

@@ -35,7 +35,7 @@ dependencies {
     implementation 'redis.clients:jedis'
     implementation 'org.keycloak:keycloak-spring-boot-starter:11.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
     compileOnly 'org.projectlombok:lombok'
 
