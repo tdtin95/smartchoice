@@ -1,9 +1,9 @@
 spring:
   application:
-    name: registry-service
+    name: audit-service
   cloud:
     config:
-      profile: default
+      profile: production
       uri: http://config-server:8080
 management:
   endpoints:

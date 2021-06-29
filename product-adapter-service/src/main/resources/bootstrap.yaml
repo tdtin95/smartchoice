@@ -3,8 +3,8 @@ spring:
     name: product-adapter-service
   cloud:
     config:
-      profile: default
-      uri: http://localhost:8080
+      profile: production
+      uri: http://config-server:8080
 management:
   endpoints:
     web:
