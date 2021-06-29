@@ -28,6 +28,10 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://keycloak:8080/auth/realms/master/protocol/openid-connect/certs
+eureka:
+  client:
+    service-url:
+      defaultZone=http://registry-service:8761/eureka
 management:
   endpoints:
     web:
