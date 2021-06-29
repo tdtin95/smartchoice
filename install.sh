@@ -1,12 +1,12 @@
-project=(product-adapter-service product-service audit-service registry-service api-gateway)
+project=(product-adapter-service product-service audit-service registry-service spring-cloud-gateway config-server)
 
 mkdir build
 for name in "${project[@]}"
 do	
 	echo "Building project $name"
 	cd $name
-	./gradlew build
-    #docker build -t $name .
+	./gradlew build -x test
+    docker build -t $name .
 	cp build/libs/$name-0.0.1-SNAPSHOT.jar ../build/$name.jar
 	cd ..
 done

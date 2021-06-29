@@ -17,8 +17,14 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+
+    implementation ('org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'){
+        exclude group: "com.netflix.ribbon", module: "ribbon-eureka"
+        exclude group: "org.springframework.cloud", module: "spring-cloud-starter-ribbon"
+
+    }
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
