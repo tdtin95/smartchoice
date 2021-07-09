@@ -8,6 +8,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -25,6 +26,12 @@ public class ProductServiceApplication {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setInterceptors(List.of(new AuthorizationPropagationInterceptor()));
         return restTemplate;
+    }
+
+    @Bean
+    @LoadBalanced
+    public WebClient.Builder loadBalancedWebClientBuilder() {
+        return WebClient.builder();
     }
 }
 
