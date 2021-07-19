@@ -1,5 +1,6 @@
 package com.smartchoice.product.service.config.keycloak;
 
+import com.smartchoice.product.service.resource.TokenConsumer;
 import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents;
@@ -21,6 +22,7 @@ import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.web.context.annotation.RequestScope;
 
 @Configuration
 @EnableWebSecurity
@@ -60,6 +62,12 @@ public class KeycloakConfig extends KeycloakWebSecurityConfigurerAdapter {
     @LoadBalanced
     public KeycloakRestTemplate keycloakTemplate() {
         return new KeycloakRestTemplate(keycloakClientRequestFactory);
+    }
+
+    @Bean
+    @RequestScope
+    public TokenConsumer tokenConsumer() {
+        return new TokenConsumer();
     }
 
     @Autowired

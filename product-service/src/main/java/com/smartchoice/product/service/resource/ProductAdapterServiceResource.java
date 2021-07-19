@@ -1,6 +1,8 @@
 package com.smartchoice.product.service.resource;
 
 import com.smartchoice.product.service.dto.Product;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.slf4j.Logger;
@@ -20,7 +22,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory.AUTHORIZATION_HEADER;
@@ -35,14 +36,15 @@ public class ProductAdapterServiceResource {
 
     private RestTemplate restTemplate;
 
-    @Autowired
     private final WebClient.Builder webClientBuilder;
 
+    private final TokenConsumer tokenConsumer;
 
     @Autowired
-    public ProductAdapterServiceResource(RestTemplate restTemplate, WebClient.Builder webClientBuilder) {
+    public ProductAdapterServiceResource(RestTemplate restTemplate, WebClient.Builder webClientBuilder, TokenConsumer tokenConsumer) {
         this.restTemplate = restTemplate;
         this.webClientBuilder = webClientBuilder;
+        this.tokenConsumer = tokenConsumer;
     }
 
     //    @HystrixCommand(
@@ -71,41 +73,35 @@ public class ProductAdapterServiceResource {
 //                            name = "metrics.rollingStats.numBuckets",
 //                            value = "5")}
 //    )
+
+    @Retry(name = "product-adapter-resource")
+    @CircuitBreaker(name = "product-adapter-resource", fallbackMethod = "findProductFallback")
     public List<Product> findProduct(MultiValueMap<String, String> criterion) {
         WebClient webClient = webClientBuilder
                 .baseUrl(serverUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(AUTHORIZATION_HEADER, "Bearer " + getToken())
                 .build();
-
-
         Mono<List<Product>> productFlux = webClient.get().uri(uri -> uri.queryParams(criterion).build()).retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Product>>() {
-                }).onErrorResume(error ->
-                {
-                    LOGGER.error(error.getMessage(), error);
-                    return Mono.just(new ArrayList<>());
                 });
+//                .onErrorResume(error ->
+//                {
+//                    LOGGER.error(error.getMessage(), error);
+//                    return Mono.just(new ArrayList<>());
+//                });
         // .onErrorReturn(List.of());
-
         return productFlux.block();
 
     }
 
-    public List<Product> handleConnectTimeOut(MultiValueMap<String, String> criterion) {
-        LOGGER.error("Call product-adapter-service reached timeout");
+    public List<Product> findProductFallback(MultiValueMap<String, String> criterion, Throwable error) {
+        LOGGER.error("Call product-adapter-service has error {}", error.getMessage());
         throw new ResponseStatusException(
-                HttpStatus.SERVICE_UNAVAILABLE, "product-adapter-service is temporary down");
+                HttpStatus.SERVICE_UNAVAILABLE, "product-adapter-service is temporary down", error);
     }
 
     private String getToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null && !KeycloakAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
-            return "";
-        }
-        KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) authentication;
-        KeycloakSecurityContext context = token.getAccount().getKeycloakSecurityContext();
-        return context.getTokenString();
+        return tokenConsumer.getToken();
     }
 }

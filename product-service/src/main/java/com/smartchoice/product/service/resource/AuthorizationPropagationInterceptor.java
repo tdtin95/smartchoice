@@ -13,21 +13,11 @@ import java.io.IOException;
 
 import static org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory.AUTHORIZATION_HEADER;
 
+
 public class AuthorizationPropagationInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        request.getHeaders().set(AUTHORIZATION_HEADER, "Bearer " + getToken());
+        request.getHeaders().set(AUTHORIZATION_HEADER, "Bearer " + new TokenConsumer().getToken());
         return execution.execute(request, body);
-    }
-
-    private String getToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null && !KeycloakAuthenticationToken.class.isAssignableFrom(authentication.getClass())) {
-            return "";
-        }
-        KeycloakAuthenticationToken token = (KeycloakAuthenticationToken) authentication;
-        KeycloakSecurityContext context = token.getAccount().getKeycloakSecurityContext();
-        return context.getTokenString();
     }
 }
