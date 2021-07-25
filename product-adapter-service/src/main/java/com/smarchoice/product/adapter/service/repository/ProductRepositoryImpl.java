@@ -1,7 +1,7 @@
 package com.smarchoice.product.adapter.service.repository;
 
 import com.smarchoice.product.adapter.service.dto.Product;
-import com.smarchoice.product.adapter.service.resource.Provider;
+import com.smarchoice.product.adapter.service.dto.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -58,6 +58,6 @@ public class ProductRepositoryImpl implements ProductRepository {
      * @return product group identifier
      */
     private String buildProductGroupIdentifier(String productName, Provider provider) {
-        return productName + "-" + provider.getName();
+        return productName + "-" + provider;
     }
 }

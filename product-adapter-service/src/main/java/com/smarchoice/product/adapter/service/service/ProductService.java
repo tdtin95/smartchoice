@@ -1,13 +1,12 @@
 package com.smarchoice.product.adapter.service.service;
 
 import com.smarchoice.product.adapter.service.dto.Product;
+import com.smarchoice.product.adapter.service.dto.Provider;
 import com.smarchoice.product.adapter.service.event.ProductProducer;
 import com.smarchoice.product.adapter.service.exception.IncompleteException;
 import com.smarchoice.product.adapter.service.repository.ProductRepository;
-import com.smarchoice.product.adapter.service.resource.Provider;
 import com.smarchoice.product.adapter.service.resource.ProviderResource;
 import com.smarchoice.product.adapter.service.resource.ResourceFactory;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

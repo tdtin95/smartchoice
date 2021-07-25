@@ -1,8 +1,27 @@
+//buildscript {
+//    repositories {
+//        maven {
+//            url "https://plugins.gradle.org/m2/"
+//        }
+//        maven {
+//            url "https://packages.confluent.io/maven/"
+//        }
+//        maven {
+//            url = uri("https://jitpack.io")
+//        }
+//    }
+//}
+
+
 plugins {
     id 'org.springframework.boot' version '2.3.10.RELEASE'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    //id "com.commercehub.gradle.plugin.avro" version "0.99.99"
+    id "com.github.davidmc24.gradle.plugin.avro" version "1.2.1"
+    //  id 'com.github.imflog.kafka-schema-registry-gradle-plugin' version '1.4.0'
 }
+//apply plugin: "com.github.imflog.kafka-schema-registry-gradle-plugin"
 
 group = 'com.smarchoice'
 version = '0.0.1-SNAPSHOT'
@@ -14,8 +33,13 @@ configurations {
     }
 }
 
+
 repositories {
     mavenCentral()
+    gradlePluginPortal()
+    maven {
+        url "https://packages.confluent.io/maven/"
+    }
 }
 
 dependencies {
@@ -26,7 +50,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
     implementation 'org.springframework.cloud:spring-cloud-starter-zipkin'
+
+    // implementation 'com.github.imflog.kafka-schema-registry-gradle-plugin:com.github.imflog.kafka-schema-registry-gradle-plugin.gradle.plugin:1.4.0'
     implementation 'org.springframework.kafka:spring-kafka'
+    //implementation 'io.confluent:kafka-schema-registry-client:5.3.0'
+
+    compile "org.apache.avro:avro:1.10.1"
+
+    implementation 'io.confluent:kafka-avro-serializer:5.3.0'
+
     implementation 'redis.clients:jedis'
     implementation 'org.keycloak:keycloak-spring-boot-starter:11.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -40,10 +72,18 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'it.ozimov:embedded-redis:0.7.2'
-    testImplementation'org.scala-lang:scala-library:2.12.11'
+    testImplementation 'org.scala-lang:scala-library:2.12.11'
     testImplementation 'io.rest-assured:spring-mock-mvc'
     testImplementation 'io.rest-assured:xml-path:4.2.0'
 }
+task generateAvro(type: com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask) {
+    //point plugin to folder with avro schemas
+    source("src/main/resources/avro")
+    //point plugin to folder with generated POJOs
+    outputDir = file("src/main/java")
+}
+compileJava.source(generateAvro.outputs)
+
 
 ext {
     set('springCloudVersion', "Hoxton.SR11")

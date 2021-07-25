@@ -3,7 +3,7 @@ package com.smarchoice.product.adapter.service.repository;
 import com.smarchoice.product.adapter.service.ProductTestUtil;
 import com.smarchoice.product.adapter.service.config.RedisTestConfiguration;
 import com.smarchoice.product.adapter.service.dto.Product;
-import com.smarchoice.product.adapter.service.resource.Provider;
+import com.smarchoice.product.adapter.service.dto.Provider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

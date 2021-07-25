@@ -1,0 +1,74 @@
+{
+  "namespace": "com.smarchoice.product.adapter.service.dto",
+  "type": "record",
+  "name": "ProductGroup",
+  "fields": [
+    {
+      "name": "products",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "Product",
+          "type": "record",
+          "fields": [
+            {
+              "name": "productName",
+              "type": "string"
+            },
+            {
+              "name": "image",
+              "type": "string"
+            },
+            {
+              "name": "price",
+              "type": "long"
+            },
+            {
+              "name": "discountRate",
+              "type": "int"
+            },
+            {
+              "name": "provider",
+              "type": {
+                "name": "Provider",
+                "type": "enum",
+                "symbols": [
+                  "SHOPEE",
+                  "LAZADA",
+                  "TIKI"
+                ]
+              }
+            },
+            {
+              "name": "promotion",
+              "type": {
+                "type": "record",
+                "name": "Promotion",
+                "fields": [
+                  {
+                    "name": "details",
+                    "type": "string"
+                  },
+                  {
+                    "name": "validFrom",
+                    "type": {
+                      "type": "int",
+                      "logicalType": "date"
+                    }
+                  },
+                  {
+                    "name": "validTill",
+                    "type": {
+                      "type": "int",
+                      "logicalType": "date"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarchoice.product.adapter.service.ProductTestUtil;
 import com.smarchoice.product.adapter.service.dto.Product;
-import com.smarchoice.product.adapter.service.resource.Provider;
+import com.smarchoice.product.adapter.service.dto.Provider;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringDeserializer;

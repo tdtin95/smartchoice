@@ -1,6 +1,8 @@
 package com.smarchoice.product.adapter.service.config;
 
 import com.smarchoice.product.adapter.service.dto.Product;
+import com.smarchoice.product.adapter.service.dto.ProductGroup;
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,9 @@ class KafkaProducerConfig {
     @Value("${kafka.bootstrapAddress}")
     private String bootstrapServers;
 
+    @Value("${kafka.registry.url}")
+    private String registry;
+
     @Bean
     public Map<String, Object> producerConfigs() {
         Map<String, Object> props = new HashMap<>();
@@ -28,18 +32,18 @@ class KafkaProducerConfig {
                 bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                JsonSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
+        props.put("schema.registry.url", registry);
         return props;
     }
 
     @Bean
-    public ProducerFactory<String, List<Product>> producerFactory() {
+    public ProducerFactory<String, ProductGroup> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, List<Product>> kafkaTemplate() {
+    public KafkaTemplate<String, ProductGroup> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

@@ -1,8 +1,6 @@
 package com.smarchoice.product.adapter.service.config;
 
-import com.smarchoice.product.adapter.service.resource.Provider;
 import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

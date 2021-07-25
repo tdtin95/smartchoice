@@ -1,6 +1,7 @@
 package com.smarchoice.product.adapter.service.event;
 
 import com.smarchoice.product.adapter.service.dto.Product;
+import com.smarchoice.product.adapter.service.dto.ProductGroup;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,23 +18,24 @@ import java.util.List;
 @Component
 public class ProductProducer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductProducer.class);
-    private final KafkaTemplate<String, List<Product>> kafkaTemplate;
+    private final KafkaTemplate<String, ProductGroup> kafkaTemplate;
 
     @Value("${message.queue.product.topic}")
     private String messageQueueTopic;
 
     @Autowired
-    public ProductProducer(KafkaTemplate<String, List<Product>> kafkaTemplate) {
+    public ProductProducer(KafkaTemplate<String, ProductGroup> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     public void sendToMessageQueue(List<Product> products) {
         if (CollectionUtils.isNotEmpty(products)) {
-            ListenableFuture<SendResult<String, List<Product>>> future = kafkaTemplate.send(messageQueueTopic, products);
+            ProductGroup productGroup = ProductGroup.newBuilder().setProducts(products).build();
+            ListenableFuture<SendResult<String, ProductGroup>> future = kafkaTemplate.send(messageQueueTopic, productGroup);
 
             future.addCallback(new ListenableFutureCallback<>() {
                 @Override
-                public void onSuccess(SendResult<String, List<Product>> result) {
+                public void onSuccess(SendResult<String, ProductGroup> result) {
                     LOGGER.info("Sent products with offset=[" + result.getRecordMetadata().offset() + "]");
                 }
 

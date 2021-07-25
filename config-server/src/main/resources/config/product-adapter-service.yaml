@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: product-adapter-service
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+  zipkin:
+    base-url: http://localhost:9411/
+
+server:
+  port: 3082
+external:
+  provider:
+    shopee:
+      service:
+        url: https://608ced319f42b20017c3e613.mockapi.io/api/products
+    tiki:
+      service:
+        url: https://608ced319f42b20017c3e613.mockapi.io/api/tikiproducts
+
+    lazada:
+      service:
+        url: https://608ced319f42b20017c3e613.mockapi.io/api/lazadaproducts
+kafka:
+  bootstrapAddress: http://localhost:9093
+  registry:
+    url: http://localhost:8085
+message:
+  queue:
+    product:
+      topic: product-message-queue
+cache:
+  product:
+    group:
+      lifespan: 31
+keycloak:
+  auth-server-url: http://localhost:7777/auth
+  realm: master
+  ssl-required: external
+  resource: admin-cli
+  public-client: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9761/eureka
+

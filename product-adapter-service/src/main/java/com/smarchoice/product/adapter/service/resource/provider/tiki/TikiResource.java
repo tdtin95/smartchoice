@@ -1,7 +1,7 @@
 package com.smarchoice.product.adapter.service.resource.provider.tiki;
 
+import com.smarchoice.product.adapter.service.dto.Provider;
 import com.smarchoice.product.adapter.service.resource.AbstractProviderResource;
-import com.smarchoice.product.adapter.service.resource.Provider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
